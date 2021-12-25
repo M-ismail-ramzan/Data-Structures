@@ -1,9 +1,14 @@
-#include <iostream>
 using namespace std;
+
+struct circular_linked_list_node;
+
 
 struct Routing_table_node
 {
+    // a pointer for the Machine..
+    circular_linked_list_node *ptr;
     // routing index and Number for the storage of the Index & Numbers
+    
     int routing_index;
     int routing_number;
     // These are the Next and Previous Pointers for doubly Linked List..
@@ -76,7 +81,7 @@ public:
         }
     }
     // a Function to Insert at the End of the Doubly Linked list..
-    void insert_the_node_at_the_end(int routing_idx, int routing_no)
+    void insert_the_node_at_the_end(int routing_idx, int routing_no, circular_linked_list_node *pointer)
     {
 
         Routing_table_node *new_node = new Routing_table_node();
@@ -84,6 +89,7 @@ public:
         // Put the data
         new_node->routing_index = routing_idx;
         new_node->routing_number = routing_no;
+        new_node->ptr = pointer;
         // make the last as Null..
         new_node->routing_next = NULL;
         // check if it;s empyrt

@@ -1,8 +1,4 @@
-#include <iostream>
-#include <math.h>
-#include <time.h>
-#include "./routing_table.h"
-using namespace std;
+#include "routing_table.h"
 
 struct circular_linked_list_node
 {
@@ -202,35 +198,18 @@ public:
     void find_storage_machine(int data_id,int start_machine_id){
         // Now we need to identify which machine we need to visit.
         // steps::::::::::::::::
-        // 1) -->  Go and find the start Machine id from the Linked list..[x]
-        // 2) Once Found!! Now Print it's Routing table to see  -- [x]
-        //  Make a function that traverse the doubly linked list... and we pass him the index and it return's the address of that index so we can move to that machine... 
-        //
+        // 1) -->  Go and find the start Machine id from the Linked list..
+        // 2) Once Found!! Now Print it's Routing table to see
+        // 3) Then Apply the 3 Conditions on it;s Routing table...
+        // 4) Routing table Must have a Pointer to the machine's id it contain
 
          circular_linked_list_node *temp;
             temp = last->next;
             do
             {
-                if(start_machine_id == temp->machine_id){
-                    // store the machine id in temp from where we need to start searching
-                    break;
-                }
+                
                 temp = temp->next;
             } while (temp != last->next);
-
-            // now we have the machine from where we need to start Searching..
-
-            // Let's take a look at It's Routing table..
-            cout << "\n We will start searching from machine no:  " << temp->machine_id<< "\n";
-            cout << "\n Routing table of this Machine is \n";
-            temp->route_table.display_routing_table();
-
-            // Now let's start Traversubg and Have Some FUN !!
-
-            // First of all let's check is the Pointer right orr not ?
-            
-
-
     }
     // This function Traverse Each Node in the Machine and Fill the Routing table.
     void fill_routing_table(int no_of_machines, int max_range_of_machine,int bit_Size)
@@ -309,159 +288,3 @@ public:
         } while (temp2 != last->next);
     }
 };
-
-int main()
-{
-    // for changing time ( actually for random numbers)
-    srand(time(0));
-    // Ask User the Number of Bits he wants to Store...
-    int bit_size = 0;
-    cout << "\n Please Specify the Number of Bits u want to Store:";
-    cin >> bit_size;
-
-    int max_range_of_machine = pow(2, (bit_size));
-    cout << "\n Number of Machines Possible: " << max_range_of_machine << "\n";
-    // Now i need to ask User the Number the Machine...
-    int number_of_machine = 9999;
-    while (true)
-    {
-        if (number_of_machine <= max_range_of_machine)
-        {
-            break;
-        }
-        else
-        {
-            cout << "\n Please specify the Number of Machines that You want to make: ";
-            cin >> number_of_machine;
-            if (number_of_machine > max_range_of_machine)
-            {
-                cout << "\n You Cannot Create So Much Machines... \n";
-                cout << "Machine Range     [  1  to " << max_range_of_machine << " ]";
-            }
-        }
-    }
-
-    // Now Ask weather User want to assign Them Id's Themselves or Not!!
-    cout << "\n-----------------------------------------------\n";
-    cout << "\n Number of Machones: " << number_of_machine << "\n";
-    cout << "\n Id's From Range 0 to " << max_range_of_machine - 1 << "\n";
-    cout << "\n-----------------------------------------------\n";
-    cout << "\n Do you want to Assign Id ";
-    cout << "\n1) Manually ";
-    cout << "\n2) Automatically ";
-    cout << "\nEnter: ";
-    int choice = 0;
-    cin >> choice;
-    circular_linked_list Machines;
-    switch (choice)
-    {
-    case 1:
-    {
-        cout << "\n User wants to assign the id's Manually\n";
-        // Now Here we Runs the Loop And take Id's From User and create a linked List.
-        // EACH NODE ( Machine ) will have a id variable to store it's Id.
-        int previous_id = 0;
-        int machine_id = 0;
-
-        for (int i = 0; i < number_of_machine; i++)
-        {
-            // 2 Checks's
-
-            //  No Repeated Id should be allowed to User
-            //  Must be In range..
-            //  Must be in ascending Order
-
-            // Get the machine id and Create a node with that Particular Id
-            cout << "\n Please Enter the Id of the Machine \n Enter:  ";
-            cin >> machine_id;
-
-            while (true)
-            {
-                // cheaking weather the id is repeated or not!!!
-                bool is_machine_already_present = Machines.check_if_machine_present(machine_id);
-                // if machine is already present..
-                if (is_machine_already_present)
-                {
-                    cout << "\n Machine id is already in the list.. \n Enter Again:";
-                    cin >> machine_id;
-                }
-                else if (machine_id <= -1 || machine_id >= (max_range_of_machine - 1))
-                {
-                    cout << "\n You have Entered Id which is not In Range..\nEnter Again: ";
-                    cin >> machine_id;
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            // A check for the User that he never Enters the Id's In Decending Order
-            if (previous_id >= machine_id)
-            {
-                cout << "\n You have Not Entered In ascending. SO Arranging Machings....\n ";
-            }
-            previous_id = machine_id;
-            Machines.insert_ascending_order(machine_id);
-            cout << " Machine with " << machine_id << " is Generated Successfully\n";
-        }
-    }
-    break;
-
-    case 2:
-        for (int i = 0; i < number_of_machine; i++)
-        {
-            // 2 Checks's
-            int random = rand() % (max_range_of_machine - 1);
-            //  Must be In range..
-            // must not be repeating..
-            while (true)
-            {
-                // cheaking weather the id is repeated or not!!!
-                bool is_machine_already_present = Machines.check_if_machine_present(random);
-                // if machine is already present..
-                if (is_machine_already_present)
-                {
-                    random = rand() % (max_range_of_machine - 1);
-                }
-                else
-                {
-                    break;
-                }
-            }
-            //  Must be in ascending Order
-            Machines.insert_ascending_order(random);
-            cout << " Machine with ID " << random << " is Generated Successfully\n";
-        }
-        break;
-    default:
-        cout << "\n Invalid Input.\n";
-        break;
-    }
-    // Until this Point all the Machines has been made and the id's has been assigned to them.
-    // Now it's time for us to fill the Routing Table for each of the machine
-
-    Machines.fill_routing_table(number_of_machine, (max_range_of_machine - 1),bit_size );
-
-    // Display me the Final Linked List....
-    cout << "\n";
-    Machines.display_machine_nodes();
-
-    // Until this Point. All the machines has been made and the Routing tables are inserted as well.
-    // Now we will ask the user Key,value Pair and will store them in the Avl tree and will identify that
-    // which machine is responsible for storing the data..
-
-    int data_id=0;
-    int start_machine_id=0;
-    cout << "\n Please Enter the Data ID : ";
-    cin >> data_id;
-    cout << "\n Start Search From Which Machine Number :";
-    cin >> start_machine_id;
-
-    // Now i need to use Routing Table to identify to which machine i need to look at!!!
-    Machines.find_storage_machine(data_id,start_machine_id);
-
-
-
-    return 0;
-}
