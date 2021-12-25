@@ -59,7 +59,7 @@ public:
             // travser until u find the machine_id
             if (new_machine_id <= temp2->machine_id)
             {
-                insert_after(temp->machine_id,new_machine_id);
+                insert_after(temp->machine_id, new_machine_id);
                 // if inserted then return from this function
                 return;
             }
@@ -181,7 +181,7 @@ public:
         last->next = temp;
     }
     // This function Traverse Each Node in the Machine and Fill the Routing table.
-    void fill_routing_table(int no_of_machines){
+    void fill_routing_table(int no_of_machines, int max_range_of_machine) {
         // First of all .. Each machine will have the max number of machine as index's of the Routing table..
 
 
@@ -200,12 +200,16 @@ public:
 
                 // The index will always be increasing from 1 to no_of_machine
                 //  The value needs to be calculated from the Formaula.
-                int number_from_formula = ((temp2->machine_id) - pow(2,i-1));
+                int number_from_formula = ((temp2->machine_id) + pow(2, i - 1));
+                // check if number exceeds the limit then again take it's mode
+                if(number_from_formula > (max_range_of_machine)){
+                    number_from_formula = number_from_formula % max_range_of_machine;
+                }
 
                 // Now i need to see which machine is responsible for handling the above Number that number will be stored in the Routing Index..
                 temp = last->next;
                 // We need to treat root as special...because of it's range..
-                
+
                 int last_machine_id = last->machine_id;
                 int max_range = no_of_machines - 1;
                 bool root_Test = false;
@@ -214,7 +218,7 @@ public:
                 for (int i = last_machine_id; i <= max_range; i++)
                 {
                     // now check if root handles that number
-                    if(i == number_from_formula){
+                    if (i == number_from_formula) {
                         // Now temp will be responsible for this number.
                         root_Test = true;
                         temp = last->next;
@@ -222,22 +226,22 @@ public:
 
                     }
                 }
-                
-                
-                do{
+
+
+                do {
                     // if root is handling that number
-                    if(root_Test){
+                    if (root_Test) {
                         break;
                     }
                     // If number is less than the machine then. then that machine stores that number
-                    if(number_from_formula <= temp->machine_id){
+                    if (number_from_formula <= temp->machine_id) {
                         break;
                     }
                     temp = temp->next;
-                }while(temp!=last->next);
+                } while (temp != last->next);
                 // now temp know's who is responsible for storing that number..
                 int store_machine_id = temp->machine_id;
-                temp2->route_table.insert_the_node_at_the_end(i,store_machine_id);
+                temp2->route_table.insert_the_node_at_the_end(i, store_machine_id);
             }
 
             // Now we can print the doubly of the Previous Machine
@@ -318,10 +322,10 @@ int main()
             cin >> machine_id;
 
             // A check for the User that he never Enters the Id's In Decending Order
-                if (previous_id >= machine_id)
-                {
-                    cout << "\n You have Not Entered In ascending. SO Arranging Machings....\n ";
-                }
+            if (previous_id >= machine_id)
+            {
+                cout << "\n You have Not Entered In ascending. SO Arranging Machings....\n ";
+            }
             previous_id = machine_id;
             Machines.insert_ascending_order(machine_id);
             cout << " Machine with " << machine_id << " is Generated Successfully\n";
@@ -333,7 +337,7 @@ int main()
         for (int i = 0; i < number_of_machine; i++)
         {
             // 2 Checks's
-            int random =  rand() % (max_range_of_machine - 1);
+            int random = rand() % (max_range_of_machine - 1);
             //  No Repeated Id should be allowed to User
             //  Must be In range..
             //  Must be in ascending Order
@@ -348,10 +352,11 @@ int main()
     // Until this Point all the Machines has been made and the id's has been assigned to them.
     // Now it's time for us to fill the Routing Table for each of the machine
 
-    Machines.fill_routing_table(number_of_machine);
+    Machines.fill_routing_table(number_of_machine,max_range_of_machine);
 
 
     // Display me the Final Linked List....
+    cout << "\n";
     Machines.display_machine_nodes();
 
     return 0;
