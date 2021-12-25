@@ -2,13 +2,12 @@ using namespace std;
 
 struct circular_linked_list_node;
 
-
 struct Routing_table_node
 {
     // a pointer for the Machine..
     circular_linked_list_node *ptr;
     // routing index and Number for the storage of the Index & Numbers
-    
+
     int routing_index;
     int routing_number;
     // These are the Next and Previous Pointers for doubly Linked List..
@@ -26,6 +25,50 @@ public:
     Routing_table_linked_list()
     {
         head = NULL;
+    }
+    // A function that takes in the data_id and check where do we need to go next and return the pointer of the next machine to be visited
+
+    circular_linked_list_node *finding_next_machine(int machine_id, int data_id, int bit_size, circular_linked_list_node *circular_temp)
+    {
+        Routing_table_node *temp = head;
+        cout << "\nHead is: " << head->ptr << "  " << head->routing_index << "   & " << head->routing_number;
+        if (machine_id == data_id)
+        {
+            // then we need to stay in this machine..
+            return circular_temp;
+        }
+
+        else if (machine_id < data_id && data_id <= head->routing_number)
+        {
+            // then we need to traverse to the head->ptr FTP[1]
+            return head->ptr;
+        }
+        else
+        {
+            // i don't want it to point to null so that's why
+            for (int i = 1; i < bit_size; i++)
+            {
+                // now we need to apply the conditions in here....
+                if (data_id >= temp->routing_number && data_id <= temp->routing_next->routing_number)
+                {
+                    return temp->ptr;
+                }
+                temp = temp->routing_next;
+            }
+
+            // If none of above conditions get Passed then I need to move to the last index machine OR return Null indecating that this machine has the 
+            // target key value!!!
+            // Check if that value is near or not!!!!!
+
+            // special check for the Roooooot
+            if(circular_temp->machine_id == )
+            if(data_id <= machine_id){
+                    // this is true for all machines except root!!
+            }
+            return circular_temp;
+
+        }
+        // we need to traverse the each node...
     }
 
     // Insert the Node at the Start of the Routing table linked list..
@@ -141,7 +184,7 @@ public:
         delete temp;
     }
     // Find an index and change it's correcsponding Value..
-    void change_value_at_index(int idx,int new_number)
+    void change_value_at_index(int idx, int new_number)
     {
         // Find that Particular Node
         Routing_table_node *temp = head;

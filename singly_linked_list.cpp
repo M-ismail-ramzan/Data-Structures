@@ -10,20 +10,20 @@ struct circular_linked_list_node
     Routing_table_linked_list route_table;
     int machine_id;
     // a pointer to point on the next Machine
-    circular_linked_list_node *next;
+    circular_linked_list_node* next;
 };
 
 class circular_linked_list
 {
     // Pointers are made for the circular linked list.
-    circular_linked_list_node *head = NULL;
-    circular_linked_list_node *last = NULL;
+    circular_linked_list_node* head = NULL;
+    circular_linked_list_node* last = NULL;
 
 public:
     void insert_when_empty(int new_machine_id)
     {
         // allocate memory for node
-        circular_linked_list_node *temp = new circular_linked_list_node();
+        circular_linked_list_node* temp = new circular_linked_list_node();
 
         // Adding the machine_id
         temp->machine_id = new_machine_id;
@@ -51,7 +51,7 @@ public:
             return;
         }
         // Now let's travsere and find the Correct Position of the Inseration
-        circular_linked_list_node *temp, *temp2;
+        circular_linked_list_node* temp, * temp2;
         // pOintes to the first element
         temp2 = last->next;
         temp = last;
@@ -87,7 +87,7 @@ public:
         }
 
         // else create a new node
-        circular_linked_list_node *temp = new circular_linked_list_node();
+        circular_linked_list_node* temp = new circular_linked_list_node();
 
         // Assign the machine_id to the new Node...
         temp->machine_id = new_machine_id;
@@ -105,7 +105,7 @@ public:
             return;
         }
 
-        circular_linked_list_node *temp, *temp2;
+        circular_linked_list_node* temp, * temp2;
         // pOintes to the first element
         temp2 = last->next;
         do
@@ -139,7 +139,7 @@ public:
     // traverse the circular linked list
     void display_machine_nodes()
     {
-        circular_linked_list_node *temp;
+        circular_linked_list_node* temp;
 
         // If list is empty, return.
         if (last == NULL)
@@ -172,7 +172,7 @@ public:
         }
 
         // else create a new node
-        struct circular_linked_list_node *temp = new circular_linked_list_node;
+        struct circular_linked_list_node* temp = new circular_linked_list_node;
 
         // set new machine_id to node
         temp->machine_id = new_machine_id;
@@ -184,7 +184,7 @@ public:
     {
         if (last != NULL)
         {
-            circular_linked_list_node *temp;
+            circular_linked_list_node* temp;
             temp = last->next;
             do
             {
@@ -199,46 +199,60 @@ public:
         return false;
     }
     // This function looks into the doubly of each Node and check's where we need to store the data
-    void find_storage_machine(int data_id,int start_machine_id){
+    void find_storage_machine(int data_id, int start_machine_id, int bit_size)
+    {
         // Now we need to identify which machine we need to visit.
         // steps::::::::::::::::
         // 1) -->  Go and find the start Machine id from the Linked list..[x]
         // 2) Once Found!! Now Print it's Routing table to see  -- [x]
-        //  Make a function that traverse the doubly linked list... and we pass him the index and it return's the address of that index so we can move to that machine... 
+        //  Make a function that traverse the doubly linked list... and we pass him the index and it return's the address of that index so we can move to that machine...
         //
 
-         circular_linked_list_node *temp;
-            temp = last->next;
-            do
+        circular_linked_list_node* temp;
+        temp = last->next;
+        do
+        {
+            if (start_machine_id == temp->machine_id)
             {
-                if(start_machine_id == temp->machine_id){
-                    // store the machine id in temp from where we need to start searching
-                    break;
-                }
-                temp = temp->next;
-            } while (temp != last->next);
+                // store the machine id in temp from where we need to start searching
+                break;
+            }
+            temp = temp->next;
+        } while (temp != last->next);
 
-            // now we have the machine from where we need to start Searching..
+        // now we have the machine from where we need to start Searching..
 
-            // Let's take a look at It's Routing table..
-            cout << "\n We will start searching from machine no:  " << temp->machine_id<< "\n";
-            cout << "\n Routing table of this Machine is \n";
-            temp->route_table.display_routing_table();
+        // Let's take a look at It's Routing table..
+        cout << "\n We will start searching from machine no:  " << temp->machine_id << "\n";
+        cout << "\n Routing table of this Machine is \n";
+        temp->route_table.display_routing_table();
 
-            // Now let's start Traversubg and Have Some FUN !!
-
+        // Now let's start Traversubg and Have Some FUN !!
+        start_machine_id = temp->machine_id;
+        
+        while(true){
+           // call the Function from this machine and check it's routing index
+            circular_linked_list_node* temp2 = temp->route_table.finding_next_machine(start_machine_id, data_id , bit_size , temp);
+            if (temp2 != temp)
+                cout << "\nWe are Travelled to Machine: " << temp2->machine_id;
+            else 
+            {
+                cout << "FOUND!!!!";
+                break;
+            }
             // First of all let's check is the Pointer right orr not ?
-            
-
-
+            start_machine_id = temp2->machine_id;
+            temp = temp2;
+        }
+        
     }
     // This function Traverse Each Node in the Machine and Fill the Routing table.
-    void fill_routing_table(int no_of_machines, int max_range_of_machine,int bit_Size)
+    void fill_routing_table(int no_of_machines, int max_range_of_machine, int bit_Size)
     {
         // First of all .. Each machine will have the max number of machine as index's of the Routing table..
 
         // We need to Traverse the Each Node...
-        circular_linked_list_node *temp, *temp2;
+        circular_linked_list_node* temp, * temp2;
         // pOintes to the first element
         temp2 = last->next;
         // This loop will run for all the machines..
@@ -256,7 +270,7 @@ public:
                 // check if number exceeds the limit then again take it's mode
                 if (number_from_formula > (max_range_of_machine))
                 {
-                    number_from_formula = number_from_formula % (max_range_of_machine+1);
+                    number_from_formula = number_from_formula % (max_range_of_machine + 1);
                 }
 
                 // Now i need to see which machine is responsible for handling the above Number that number will be stored in the Routing Index..
@@ -296,9 +310,9 @@ public:
                 } while (temp != last->next);
                 // now temp know's who is responsible for storing that number..
                 int store_machine_id = temp->machine_id;
-                temp2->route_table.insert_the_node_at_the_end(i, store_machine_id,temp);
+                temp2->route_table.insert_the_node_at_the_end(i, store_machine_id, temp);
                 // We need to set the Pointer as well..
-                //temp2->route_table.set_the_pointer();
+                // temp2->route_table.set_the_pointer();
             }
 
             // Now we can print the doubly of the Previous Machine
@@ -441,7 +455,7 @@ int main()
     // Until this Point all the Machines has been made and the id's has been assigned to them.
     // Now it's time for us to fill the Routing Table for each of the machine
 
-    Machines.fill_routing_table(number_of_machine, (max_range_of_machine - 1),bit_size );
+    Machines.fill_routing_table(number_of_machine, (max_range_of_machine - 1), bit_size);
 
     // Display me the Final Linked List....
     cout << "\n";
@@ -451,17 +465,15 @@ int main()
     // Now we will ask the user Key,value Pair and will store them in the Avl tree and will identify that
     // which machine is responsible for storing the data..
 
-    int data_id=0;
-    int start_machine_id=0;
+    int data_id = 0;
+    int start_machine_id = 0;
     cout << "\n Please Enter the Data ID : ";
     cin >> data_id;
     cout << "\n Start Search From Which Machine Number :";
     cin >> start_machine_id;
 
     // Now i need to use Routing Table to identify to which machine i need to look at!!!
-    Machines.find_storage_machine(data_id,start_machine_id);
-
-
+    Machines.find_storage_machine(data_id, start_machine_id, bit_size);
 
     return 0;
 }
