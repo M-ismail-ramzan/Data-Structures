@@ -9,7 +9,7 @@ struct AVL_node			// AVL_Node created to traverse in AVL tree
 	int id;				// Id of the corresponding value
 	int value;			// The value which user entered with respect to that Id
 	int line_no;		// Line no. at which this value is placed in file
-
+    string new_value;
 	AVL_node* left_child;
 	AVL_node* right_child;
 
@@ -20,6 +20,7 @@ struct AVL_node			// AVL_Node created to traverse in AVL tree
 		value = 0;
 		left_child = NULL;
 		right_child = NULL;
+        new_value="";
 
 	}
 
@@ -103,27 +104,29 @@ public:
 		return SingleRotateWithRight(parent);
 	}
 
-	AVL_node* insert(AVL_node* r, int v)					// Function of Inserting new node
+	AVL_node* insert(AVL_node* temp, int id ,int data,string new_val)					// Function of Inserting new node
 	{
-		if (r == NULL)
+		if (temp == NULL)
 		{
-			r = new AVL_node;
-			r->value = v;
-			r->left_child = NULL;
-			r->right_child = NULL;
-			return r;
+			temp = new AVL_node;
+            temp->id = id;
+			temp->value = data;
+            temp->new_value = new_val;
+			temp->left_child = NULL;
+			temp->right_child = NULL;
+			return temp;
 		}
-		else if (v < r->value)
+		else if (data < temp->value)
 		{
-			r->left_child = insert(r->left_child, v);
-			r = balance_calculate(r);
+			temp->left_child = insert(temp->left_child,id, data,new_val);
+			temp = balance_calculate(temp);
 		}
-		else if (v >= r->value)
+		else if (data >= temp->value)
 		{
-			r->right_child = insert(r->right_child, v);
-			r = balance_calculate(r);
+			temp->right_child = insert(temp->right_child,id, data,new_val);
+			temp = balance_calculate(temp);
 		}
-		return r;
+		return temp;
 	}
 
 
@@ -171,7 +174,7 @@ public:
 			{
 				cout << " ";
 			}
-			cout << p->value;
+			cout <<p->id << " Value: "  << p->value << " " << "  string:"<< p->new_value;
 			show(p->left_child, l + 1);
 		}
 	}
@@ -235,7 +238,12 @@ public:
 			//cout << endl;
 			file << p->value<<endl;
 			cout << p->value;
+            // for the line
+            file << p->line_no<<endl;
+			cout << p->line_no;
 			//cout << endl;
+            file << p->new_value<<endl;
+			cout << p->new_value;
 			show_in_file(p->left_child, l + 1);
 		}
 	}
@@ -247,8 +255,8 @@ public:
 
 };
 
-
 /*
+
 int main()
 {
 

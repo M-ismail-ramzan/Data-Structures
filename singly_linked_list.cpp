@@ -2,28 +2,31 @@
 #include <math.h>
 #include <time.h>
 #include "./routing_table.h"
+#include "./avl_Tree.h"
 using namespace std;
 
 struct circular_linked_list_node
 {
+    // avl tree fro storing the data...
+    AVL avl_tree;
     // A routing_Table_in_each_machine
     Routing_table_linked_list route_table;
     int machine_id;
     // a pointer to point on the next Machine
-    circular_linked_list_node* next;
+    circular_linked_list_node *next;
 };
 
 class circular_linked_list
 {
     // Pointers are made for the circular linked list.
-    circular_linked_list_node* head = NULL;
-    circular_linked_list_node* last = NULL;
+    circular_linked_list_node *head = NULL;
+    circular_linked_list_node *last = NULL;
 
 public:
     void insert_when_empty(int new_machine_id)
     {
         // allocate memory for node
-        circular_linked_list_node* temp = new circular_linked_list_node();
+        circular_linked_list_node *temp = new circular_linked_list_node();
 
         // Adding the machine_id
         temp->machine_id = new_machine_id;
@@ -51,7 +54,7 @@ public:
             return;
         }
         // Now let's travsere and find the Correct Position of the Inseration
-        circular_linked_list_node* temp, * temp2;
+        circular_linked_list_node *temp, *temp2;
         // pOintes to the first element
         temp2 = last->next;
         temp = last;
@@ -87,7 +90,7 @@ public:
         }
 
         // else create a new node
-        circular_linked_list_node* temp = new circular_linked_list_node();
+        circular_linked_list_node *temp = new circular_linked_list_node();
 
         // Assign the machine_id to the new Node...
         temp->machine_id = new_machine_id;
@@ -105,7 +108,7 @@ public:
             return;
         }
 
-        circular_linked_list_node* temp, * temp2;
+        circular_linked_list_node *temp, *temp2;
         // pOintes to the first element
         temp2 = last->next;
         do
@@ -139,7 +142,7 @@ public:
     // traverse the circular linked list
     void display_machine_nodes()
     {
-        circular_linked_list_node* temp;
+        circular_linked_list_node *temp;
 
         // If list is empty, return.
         if (last == NULL)
@@ -172,7 +175,7 @@ public:
         }
 
         // else create a new node
-        struct circular_linked_list_node* temp = new circular_linked_list_node;
+        struct circular_linked_list_node *temp = new circular_linked_list_node;
 
         // set new machine_id to node
         temp->machine_id = new_machine_id;
@@ -184,7 +187,7 @@ public:
     {
         if (last != NULL)
         {
-            circular_linked_list_node* temp;
+            circular_linked_list_node *temp;
             temp = last->next;
             do
             {
@@ -199,7 +202,7 @@ public:
         return false;
     }
     // This function looks into the doubly of each Node and check's where we need to store the data
-    void find_storage_machine(int data_id, int start_machine_id, int bit_size)
+    circular_linked_list_node *find_storage_machine(int data_id, int start_machine_id, int bit_size)
     {
         // Now we need to identify which machine we need to visit.
         // steps::::::::::::::::
@@ -208,7 +211,7 @@ public:
         //  Make a function that traverse the doubly linked list... and we pass him the index and it return's the address of that index so we can move to that machine...
         //
 
-        circular_linked_list_node* temp;
+        circular_linked_list_node *temp;
         temp = last->next;
         do
         {
@@ -229,13 +232,14 @@ public:
 
         // Now let's start Traversubg and Have Some FUN !!
         start_machine_id = temp->machine_id;
-        
-        while(true){
-           // call the Function from this machine and check it's routing index
-            circular_linked_list_node* temp2 = temp->route_table.finding_next_machine(start_machine_id, data_id , bit_size , temp);
+
+        while (true)
+        {
+            // call the Function from this machine and check it's routing index
+            circular_linked_list_node *temp2 = temp->route_table.finding_next_machine(start_machine_id, data_id, bit_size, temp);
             if (temp2 != temp)
                 cout << "\nWe are Travelled to Machine: " << temp2->machine_id;
-            else 
+            else
             {
                 cout << "FOUND!!!!";
                 break;
@@ -244,7 +248,9 @@ public:
             start_machine_id = temp2->machine_id;
             temp = temp2;
         }
-        
+
+        cout << "This Machine is active: --> " << temp->machine_id << "\n";
+        return temp;
     }
     // This function Traverse Each Node in the Machine and Fill the Routing table.
     void fill_routing_table(int no_of_machines, int max_range_of_machine, int bit_Size)
@@ -252,7 +258,7 @@ public:
         // First of all .. Each machine will have the max number of machine as index's of the Routing table..
 
         // We need to Traverse the Each Node...
-        circular_linked_list_node* temp, * temp2;
+        circular_linked_list_node *temp, *temp2;
         // pOintes to the first element
         temp2 = last->next;
         // This loop will run for all the machines..
@@ -323,7 +329,12 @@ public:
         } while (temp2 != last->next);
     }
 };
-
+// this function takes in a key and return the data id out of it
+int hash_function(int key, int max_range)
+{
+    key = key % max_range;
+    return key;
+}
 int main()
 {
     // for changing time ( actually for random numbers)
@@ -458,22 +469,72 @@ int main()
     Machines.fill_routing_table(number_of_machine, (max_range_of_machine - 1), bit_size);
 
     // Display me the Final Linked List....
-    cout << "\n";
+    cout << "\n Following are the Machines Made \n";
     Machines.display_machine_nodes();
 
     // Until this Point. All the machines has been made and the Routing tables are inserted as well.
     // Now we will ask the user Key,value Pair and will store them in the Avl tree and will identify that
     // which machine is responsible for storing the data..
+    cout << "\n Please specify the Operation that You want to Perform \n";
+    cout << " 1) Add A Machine into the System";
+    cout << "\n2) Remove A Machine from the System";
+    cout << "\n3) Insert a Key,Value Pair into Machine";
+    cout << "\n4) Search for Key Into the Differenet Machine";
+    cout << "\n5) Delete the Key from the Machine";
+    cout << "\n6) Print Routing Table of any machine Id";
+    cout << "\n7) Print the Avl  tree of the Machine ";
+    choice = 0;
+    cin >> choice;
+    switch (choice)
+    {
+    case 1:
+    {
+        cout << "\n Add Machine \n";
+    }
+    break;
 
-    int data_id = 0;
-    int start_machine_id = 0;
-    cout << "\n Please Enter the Data ID : ";
-    cin >> data_id;
-    cout << "\n Start Search From Which Machine Number :";
-    cin >> start_machine_id;
+    case 2:
+    {
+        cout << "\n Remove Machine \n";
+    }
+    break;
 
-    // Now i need to use Routing Table to identify to which machine i need to look at!!!
-    Machines.find_storage_machine(data_id, start_machine_id, bit_size);
+    case 3:
+    {
+        cout << "\n Insert the Value into the System \n";
+        int data_id = 0;
+        int start_machine_id = 0;
+        cout << "\n Please Enter the key(Must be integer): ";
+        cin >> data_id;
+        // Now we will calculte the Hash of the key
+        data_id = hash_function(data_id, max_range_of_machine);
+        cout << "\n Data Id After Hashing: " << data_id << "\n";
+        cout << "\n Please Enter the Value \n";
+        string data = "welcome to my prgrams!!";
+        cout << "\n Start Search From Which Machine Number :";
+        cin >> start_machine_id;
+
+        // Now i need to use Routing Table to identify to which machine i need to look at!!!
+        circular_linked_list_node *temp=NULL;
+        temp = Machines.find_storage_machine(data_id, start_machine_id, bit_size);
+        // Now we can store that data into the temp Node..
+        AVL_node *root = NULL;
+        root = temp->avl_tree.insert(root, data_id, 65 ,data);
+        temp->avl_tree.show_in_file(root,1);
+        temp->avl_tree.show(root,1);
+    }
+    break;
+
+    case 4:
+    {
+        cout << "\n Search the Value from the System\n";
+    }
+    break;
+
+    default:
+        cout << "\n Invalid Input \n";
+        break;
+    }
 
     return 0;
 }
