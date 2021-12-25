@@ -31,7 +31,7 @@ public:
     circular_linked_list_node *finding_next_machine(int machine_id, int data_id, int bit_size, circular_linked_list_node *circular_temp)
     {
         Routing_table_node *temp = head;
-        cout << "\nHead is: " << head->ptr << "  " << head->routing_index << "   & " << head->routing_number;
+        //cout << "\nHead is: " << head->ptr << "  " << head->routing_index << "   & " << head->routing_number;
         if (machine_id == data_id)
         {
             // then we need to stay in this machine..
@@ -56,17 +56,27 @@ public:
                 temp = temp->routing_next;
             }
 
-            // If none of above conditions get Passed then I need to move to the last index machine OR return Null indecating that this machine has the 
+            // If none of above conditions get Passed then I need to move to the last index machine OR return Null indecating that this machine has the
             // target key value!!!
             // Check if that value is near or not!!!!!
 
             // special check for the Roooooot
-            if(circular_temp->machine_id == )
-            if(data_id <= machine_id){
-                    // this is true for all machines except root!!
-            }
-            return circular_temp;
 
+            if (data_id <= machine_id)
+            {
+                // this is true for all machines except root!!
+                return circular_temp;
+            }
+            else
+            {
+                Routing_table_node *temp = head;
+                // move to the last index
+                for (int i = 1; i < bit_size; i++)
+                {
+                    temp = temp->routing_next;
+                }
+                return temp->ptr;
+            }
         }
         // we need to traverse the each node...
     }
