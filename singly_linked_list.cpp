@@ -10,20 +10,20 @@ struct circular_linked_list_node
     Routing_table_linked_list route_table;
     int machine_id;
     // a pointer to point on the next Machine
-    circular_linked_list_node* next;
+    circular_linked_list_node *next;
 };
 
 class circular_linked_list
 {
     // Pointers are made for the circular linked list.
-    circular_linked_list_node* head = NULL;
-    circular_linked_list_node* last = NULL;
+    circular_linked_list_node *head = NULL;
+    circular_linked_list_node *last = NULL;
 
 public:
     void insert_when_empty(int new_machine_id)
     {
         // allocate memory for node
-        circular_linked_list_node* temp = new circular_linked_list_node();
+        circular_linked_list_node *temp = new circular_linked_list_node();
 
         // Adding the machine_id
         temp->machine_id = new_machine_id;
@@ -31,11 +31,11 @@ public:
         last = temp;
         last->next = last;
         head = last;
-
     }
 
     // A function that Makes sure that the data is entered in ascending Order always
-    void insert_ascending_order(int new_machine_id) {
+    void insert_ascending_order(int new_machine_id)
+    {
 
         // if list is empty then add the node by calling insertInEmpty
         if (last == NULL)
@@ -44,13 +44,14 @@ public:
             return;
         }
         // Now check if the first element is greater than the new id
-        if (new_machine_id <= last->next->machine_id) {
+        if (new_machine_id <= last->next->machine_id)
+        {
             // then we need to insert at the start
             insert_at_start(new_machine_id);
             return;
         }
         // Now let's travsere and find the Correct Position of the Inseration
-        circular_linked_list_node* temp, * temp2;
+        circular_linked_list_node *temp, *temp2;
         // pOintes to the first element
         temp2 = last->next;
         temp = last;
@@ -86,7 +87,7 @@ public:
         }
 
         // else create a new node
-        circular_linked_list_node* temp = new circular_linked_list_node();
+        circular_linked_list_node *temp = new circular_linked_list_node();
 
         // Assign the machine_id to the new Node...
         temp->machine_id = new_machine_id;
@@ -104,7 +105,7 @@ public:
             return;
         }
 
-        circular_linked_list_node* temp, * temp2;
+        circular_linked_list_node *temp, *temp2;
         // pOintes to the first element
         temp2 = last->next;
         do
@@ -132,15 +133,13 @@ public:
             // run until u find the last one (means first)
         } while (temp2 != last->next);
 
-
         cout << "The node with machine_id " << replaced_machine_id << " is not present in the list." << endl;
-
     }
 
     // traverse the circular linked list
     void display_machine_nodes()
     {
-        circular_linked_list_node* temp;
+        circular_linked_list_node *temp;
 
         // If list is empty, return.
         if (last == NULL)
@@ -173,27 +172,46 @@ public:
         }
 
         // else create a new node
-        struct circular_linked_list_node* temp = new circular_linked_list_node;
+        struct circular_linked_list_node *temp = new circular_linked_list_node;
 
         // set new machine_id to node
         temp->machine_id = new_machine_id;
         temp->next = last->next;
         last->next = temp;
     }
+    // This function check's weather the machine id is already their or not !!
+    bool check_if_machine_present(int test_machine_id)
+    {
+        if (last != NULL)
+        {
+            circular_linked_list_node *temp;
+            temp = last->next;
+            do
+            {
+
+                if (test_machine_id == temp->machine_id)
+                {
+                    return true;
+                }
+                temp = temp->next;
+            } while (temp != last->next);
+        }
+        return false;
+    }
     // This function Traverse Each Node in the Machine and Fill the Routing table.
-    void fill_routing_table(int no_of_machines, int max_range_of_machine) {
+    void fill_routing_table(int no_of_machines, int max_range_of_machine)
+    {
         // First of all .. Each machine will have the max number of machine as index's of the Routing table..
 
-
         // We need to Traverse the Each Node...
-        circular_linked_list_node* temp, * temp2;
+        circular_linked_list_node *temp, *temp2;
         // pOintes to the first element
         temp2 = last->next;
         // This loop will run for all the machines..
         do
         {
 
-            // For each machine i want you to run 
+            // For each machine i want you to run
             for (int i = 1; i <= no_of_machines; i++)
             {
                 // Here i need to Apply the Algo of Routing Table..
@@ -202,7 +220,8 @@ public:
                 //  The value needs to be calculated from the Formaula.
                 int number_from_formula = ((temp2->machine_id) + pow(2, i - 1));
                 // check if number exceeds the limit then again take it's mode
-                if(number_from_formula > (max_range_of_machine)){
+                if (number_from_formula > (max_range_of_machine))
+                {
                     number_from_formula = number_from_formula % max_range_of_machine;
                 }
 
@@ -218,23 +237,25 @@ public:
                 for (int i = last_machine_id; i <= max_range; i++)
                 {
                     // now check if root handles that number
-                    if (i == number_from_formula) {
+                    if (i == number_from_formula)
+                    {
                         // Now temp will be responsible for this number.
                         root_Test = true;
                         temp = last->next;
                         break;
-
                     }
                 }
 
-
-                do {
+                do
+                {
                     // if root is handling that number
-                    if (root_Test) {
+                    if (root_Test)
+                    {
                         break;
                     }
                     // If number is less than the machine then. then that machine stores that number
-                    if (number_from_formula <= temp->machine_id) {
+                    if (number_from_formula <= temp->machine_id)
+                    {
                         break;
                     }
                     temp = temp->next;
@@ -250,9 +271,6 @@ public:
             // Move to the NExt Node
             temp2 = temp2->next;
         } while (temp2 != last->next);
-
-
-
     }
 };
 
@@ -321,6 +339,27 @@ int main()
             cout << "\n Please Enter the Id of the Machine \n Enter:  ";
             cin >> machine_id;
 
+            while (true)
+            {
+                // cheaking weather the id is repeated or not!!!
+                bool is_machine_already_present = Machines.check_if_machine_present(machine_id);
+                // if machine is already present..
+                if (is_machine_already_present)
+                {
+                    cout << "\n Machine id is already in the list.. \n Enter Again:";
+                    cin >> machine_id;
+                }
+                else if (machine_id <= -1 || machine_id >= (max_range_of_machine - 1))
+                {
+                    cout << "\n You have Entered Id which is not In Range..\nEnter Again: ";
+                    cin >> machine_id;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
             // A check for the User that he never Enters the Id's In Decending Order
             if (previous_id >= machine_id)
             {
@@ -338,8 +377,22 @@ int main()
         {
             // 2 Checks's
             int random = rand() % (max_range_of_machine - 1);
-            //  No Repeated Id should be allowed to User
             //  Must be In range..
+            // must not be repeating..
+            while (true)
+            {
+                // cheaking weather the id is repeated or not!!!
+                bool is_machine_already_present = Machines.check_if_machine_present(random);
+                // if machine is already present..
+                if (is_machine_already_present)
+                {
+                    random = rand() % (max_range_of_machine - 1);
+                }
+                else
+                {
+                    break;
+                }
+            }
             //  Must be in ascending Order
             Machines.insert_ascending_order(random);
             cout << " Machine with ID " << random << " is Generated Successfully\n";
@@ -352,8 +405,7 @@ int main()
     // Until this Point all the Machines has been made and the id's has been assigned to them.
     // Now it's time for us to fill the Routing Table for each of the machine
 
-    Machines.fill_routing_table(number_of_machine,max_range_of_machine);
-
+    Machines.fill_routing_table(number_of_machine, (max_range_of_machine - 1));
 
     // Display me the Final Linked List....
     cout << "\n";
