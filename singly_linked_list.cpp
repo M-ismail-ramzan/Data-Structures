@@ -198,8 +198,25 @@ public:
         }
         return false;
     }
+    // This function looks into the doubly of each Node and check's where we need to store the data
+    void find_storage_machine(int data_id,int start_machine_id){
+        // Now we need to identify which machine we need to visit.
+        // steps::::::::::::::::
+        // 1) -->  Go and find the start Machine id from the Linked list..
+        // 2) Once Found!! Now Print it's Routing table to see
+        // 3) Then Apply the 3 Conditions on it;s Routing table...
+        // 4) Routing table Must have a Pointer to the machine's id it contain
+        
+         circular_linked_list_node *temp;
+            temp = last->next;
+            do
+            {
+                
+                temp = temp->next;
+            } while (temp != last->next);
+    }
     // This function Traverse Each Node in the Machine and Fill the Routing table.
-    void fill_routing_table(int no_of_machines, int max_range_of_machine)
+    void fill_routing_table(int no_of_machines, int max_range_of_machine,int bit_Size)
     {
         // First of all .. Each machine will have the max number of machine as index's of the Routing table..
 
@@ -212,7 +229,7 @@ public:
         {
 
             // For each machine i want you to run
-            for (int i = 1; i <= no_of_machines; i++)
+            for (int i = 1; i <= bit_Size; i++)
             {
                 // Here i need to Apply the Algo of Routing Table..
 
@@ -222,7 +239,7 @@ public:
                 // check if number exceeds the limit then again take it's mode
                 if (number_from_formula > (max_range_of_machine))
                 {
-                    number_from_formula = number_from_formula % max_range_of_machine;
+                    number_from_formula = number_from_formula % (max_range_of_machine+1);
                 }
 
                 // Now i need to see which machine is responsible for handling the above Number that number will be stored in the Routing Index..
@@ -279,14 +296,14 @@ int main()
     // for changing time ( actually for random numbers)
     srand(time(0));
     // Ask User the Number of Bits he wants to Store...
-    int number_of_machine = 0;
+    int bit_size = 0;
     cout << "\n Please Specify the Number of Bits u want to Store:";
-    cin >> number_of_machine;
+    cin >> bit_size;
 
-    int max_range_of_machine = pow(2, (number_of_machine));
+    int max_range_of_machine = pow(2, (bit_size));
     cout << "\n Number of Machines Possible: " << max_range_of_machine << "\n";
     // Now i need to ask User the Number the Machine...
-    number_of_machine = 9999;
+    int number_of_machine = 9999;
     while (true)
     {
         if (number_of_machine <= max_range_of_machine)
@@ -405,11 +422,27 @@ int main()
     // Until this Point all the Machines has been made and the id's has been assigned to them.
     // Now it's time for us to fill the Routing Table for each of the machine
 
-    Machines.fill_routing_table(number_of_machine, (max_range_of_machine - 1));
+    Machines.fill_routing_table(number_of_machine, (max_range_of_machine - 1),bit_size );
 
     // Display me the Final Linked List....
     cout << "\n";
     Machines.display_machine_nodes();
+
+    // Until this Point. All the machines has been made and the Routing tables are inserted as well.
+    // Now we will ask the user Key,value Pair and will store them in the Avl tree and will identify that
+    // which machine is responsible for storing the data..
+
+    int data_id=0;
+    int start_machine_id=0;
+    cout << "\n Please Enter the Data ID : ";
+    cin >> data_id;
+    cout << "\n From which machine do u want us to start Searching!! \n";
+    cin >> start_machine_id;
+
+    // Now i need to use Routing Table to identify to which machine i need to look at!!!
+    Machines.find_storage_machine(data_id,start_machine_id);
+
+
 
     return 0;
 }
