@@ -31,7 +31,7 @@ public:
     circular_linked_list_node *finding_next_machine(int machine_id, int data_id, int bit_size, circular_linked_list_node *circular_temp)
     {
         Routing_table_node *temp = head;
-        //cout << "\nHead is: " << head->ptr << "  " << head->routing_index << "   & " << head->routing_number;
+        // cout << "\nHead is: " << head->ptr << "  " << head->routing_index << "   & " << head->routing_number;
         if (machine_id == data_id)
         {
             // then we need to stay in this machine..
@@ -162,13 +162,48 @@ public:
         new_node->routing_previous = temp;
     }
 
+    
+void deleteNode(int val){
+ 
+    Routing_table_node *ptr, *temp;   
+  
+    temp = head;  
+    while(temp -> routing_index != val)  
+    temp = temp -> routing_next;  
+    if(temp -> routing_next == NULL)  
+    {  
+        printf("\nCan't delete\n");  
+    }  
+    else if(temp -> routing_next -> routing_next == NULL)  
+    {  
+        temp ->routing_next = NULL;  
+        printf("\nNode Deleted\n");  
+    }  
+    else  
+    {   
+        ptr = temp -> routing_next;  
+        temp -> routing_next = ptr -> routing_next;  
+        ptr -> routing_next -> routing_previous = temp;  
+        delete ptr;  
+        printf("\nNode Deleted\n");  
+    }     
+
+}
+
     // A function that makes in an index and delete that index..
     void delete_the_given_index_node(int index)
     {
         if (head == NULL)
             return;
+
+        if(head->routing_next == NULL){
+            // it means we have just the head node..
+            delete head;
+            head = NULL;
+            return;
+        }
         // First we have to check if it's head node
-        if (head->routing_index == index)
+        if (head->routing_index == index && head->routing_next != NULL)
         {
             Routing_table_node *temp = head;
             head = head->routing_next;
@@ -179,6 +214,7 @@ public:
         Routing_table_node *temp = head;
         while (temp->routing_index != index)
         {
+            if(temp->routing_next == NULL){return;}
             temp = temp->routing_next;
         }
         // Now we have the node to be deleted at the temp

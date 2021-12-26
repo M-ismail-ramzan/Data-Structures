@@ -304,6 +304,19 @@ public:
         } while (temp != last->next);
         return count;
     }
+    // this function delete the Previous Routing Table of all the nodes..
+    void delete_routes(int bit_size){
+
+        circular_linked_list_node *temp;
+        temp = last->next;
+        do{
+            for (int i = 1; i <= bit_size; i++)
+            {
+                  temp->route_table.delete_the_given_index_node(i);
+            }
+            temp=temp->next;
+        }while(temp != last->next);
+    }
     // This function Traverse Each Node in the Machine and Fill the Routing table.
     void fill_routing_table(int no_of_machines, int max_range_of_machine, int bit_Size)
     {
@@ -588,6 +601,8 @@ int main()
                 // Display me the Final Linked List....
                 cout << "\n Following are the Machines Made \n";
                 Machines.display_machine_nodes();
+                // First of all i need to delete the Previous One..
+                Machines.delete_routes(bit_size);
                 cout << "\n Updating Routing Tables \n";
                 Machines.fill_routing_table(number_of_machine, (max_range_of_machine - 1), bit_size);
             }

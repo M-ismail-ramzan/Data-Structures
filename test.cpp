@@ -1,316 +1,229 @@
-#include<iostream>
-#include<fstream>
+#include <iostream>
 using namespace std;
 
+struct circular_linked_list_node;
 
-struct AVL_node			// AVL_Node created to traverse in AVL tree
+struct Routing_table_node
 {
-	int height;			// To calculate the height factor for balancing AVL
-	int id;				// Id of the corresponding value
-	int value;			// The value which user entered with respect to that Id
-	int line_no;		// Line no. at which this value is placed in file
+    // a pointer for the Machine..
+    circular_linked_list_node *ptr;
+    // routing index and Number for the storage of the Index & Numbers
 
-	AVL_node* left_child;
-	AVL_node* right_child;
-
-
-	AVL_node()				// Default Constructor
-	{
-		id = 0;
-		value = 0;
-		left_child = NULL;
-		right_child = NULL;
-
-	}
-
-
+    int routing_index;
+    int routing_number;
+    // These are the Next and Previous Pointers for doubly Linked List..
+    Routing_table_node *routing_next;
+    Routing_table_node *routing_previous;
 };
 
-
-class AVL				// AVL Class to implement all the basics to Store ID's and Corresponding Values
+class Routing_table_linked_list
 {
-	AVL_node* root;				// Root created
+    // A pointer that points towards towards the head pf the List..
+    Routing_table_node *head;
+
 public:
-	AVL()				// Default Constructor
-	{
-		root = NULL;
-	}
+    // Default constructor of the Doubly Linked List..
+    Routing_table_linked_list()
+    {
+        head = NULL;
+    }
+    // A function that takes in the data_id and check where do we need to go next and return the pointer of the next machine to be visited
 
+    circular_linked_list_node *finding_next_machine(int machine_id, int data_id, int bit_size, circular_linked_list_node *circular_temp)
+    {
+        Routing_table_node *temp = head;
+        //cout << "\nHead is: " << head->ptr << "  " << head->routing_index << "   & " << head->routing_number;
+        if (machine_id == data_id)
+        {
+            // then we need to stay in this machine..
+            return circular_temp;
+        }
 
-	int Height(AVL_node* t)				// Function to calculate height of any node for balancing factor
-	{
-		int h = 0;
-		if (t != NULL)
-		{
-			int l_height = Height(t->left_child);
-			int r_height = Height(t->right_child);
-			int max_height = max(l_height, r_height);
-			h = max_height + 1;
-		}
-		return h;
-	}
+        else if (machine_id < data_id && data_id <= head->routing_number)
+        {
+            // then we need to traverse to the head->ptr FTP[1]
+            return head->ptr;
+        }
+        else
+        {
+            // i don't want it to point to null so that's why
+            for (int i = 1; i < bit_size; i++)
+            {
+                // now we need to apply the conditions in here....
+                if (data_id >= temp->routing_number && data_id <= temp->routing_next->routing_number)
+                {
+                    return temp->ptr;
+                }
+                temp = temp->routing_next;
+            }
 
+            // If none of above conditions get Passed then I need to move to the last index machine OR return Null indecating that this machine has the
+            // target key value!!!
+            // Check if that value is near or not!!!!!
 
-	int max(int inp1, int inp2)				// Function of Calculating Maximum node in the tree
-	{
-		return (inp1 >= inp2) ? inp1 : inp2;
-	}
+            // special check for the Roooooot
 
+            if (data_id <= machine_id)
+            {
+                // this is true for all machines except root!!
+                return circular_temp;
+            }
+            else
+            {
+                Routing_table_node *temp = head;
+                // move to the last index
+                for (int i = 1; i < bit_size; i++)
+                {
+                    temp = temp->routing_next;
+                }
+                return temp->ptr;
+            }
+        }
+        // we need to traverse the each node...
+    }
 
+    // Insert the Node at the Start of the Routing table linked list..
+    void insert_At_start(int routing_idx, int routing_no)
+    {
+        // First of all make a new Node..
+        Routing_table_node *new_node = new Routing_table_node();
+        // Put the data into the New Node..
+        new_node->routing_index = routing_idx;
+        new_node->routing_number = routing_no;
+        // Now new Node next will point to the Node..
+        new_node->routing_next = (head);
+        new_node->routing_previous = NULL;
+        // if head_node is not null then make the head previous point to new Node..
+        if ((head) != NULL)
+            head->routing_previous = new_node;
+        // move the head to point to the new node
+        (head) = new_node;
+    }
 
-	AVL_node* SingleRotateWithLeft(AVL_node* parent)				// Function of Left Rotation
-	{
-		AVL_node* t;
-		t = parent->left_child;
-		parent->left_child = t->right_child;
-		t->right_child = parent;
-		cout << "Left-Left Rotation";
-		return t;
-	}
+    void insert_the_node_at_correct_index(int routing_idx, int routing_no, int insert_after_this_index)
+    {
+        if (head != NULL)
+        {
+            // Create the Node..
+            Routing_table_node *new_node = new Routing_table_node();
 
+            // Put the data into the Node..
+            new_node->routing_index = routing_idx;
+            new_node->routing_number = routing_no;
+            // Travse the Linked List to Find the Correct Index..
+            Routing_table_node *temp = head;
+            while (temp != NULL)
+            {
+                // Find the Index to be Placed After..
+                if (temp->routing_index == insert_after_this_index)
+                {
+                    break;
+                }
+                temp = temp->routing_next;
+            }
+            // After the Above Iteration. Temp stores the Previous Node..
 
-	AVL_node* SingleRotateWithRight(AVL_node* parent)			// Function of Right Rotation
-	{
-		AVL_node* t;
-		t = parent->right_child;
-		parent->right_child = t->left_child;
-		t->left_child = parent;
-		cout << "Right-Right Rotation";
-		return t;
-	}
+            // Make next of new node points toward the Previous Node
+            new_node->routing_next = temp->routing_next;
+            // next of Previous node as the New Node..
+            temp->routing_next = new_node;
+            // make the previous of new node points to the Previous Node..
+            new_node->routing_previous = temp;
+            // change the previous of the next node if it exist
+            if (new_node->routing_next != NULL)
+                new_node->routing_next->routing_previous = new_node;
+        }
+    }
+    
 
+    // A function that makes in an index and delete that index..
+    void delete_the_given_index_node(int index)
+    {
+        if (head == NULL)
+            return;
 
+        if(head->routing_next == NULL){
+            // it means we have just the head node..
+            delete head;
+            head = NULL;
+            return;
+        }
+        // First we have to check if it's head node
+        if (head->routing_index == index && head->routing_next != NULL)
+        {
+            Routing_table_node *temp = head;
+            head = head->routing_next;
+            head->routing_previous = NULL;
+            delete temp;
+            return;
+        }
+        Routing_table_node *temp = head;
+        while (temp->routing_index != index)
+        {
+            if(temp->routing_next == NULL){return;}
+            temp = temp->routing_next;
+        }
+        // Now we have the node to be deleted at the temp
 
+        // Fix next pointer
+        if (temp->routing_next != NULL)
+            temp->routing_next->routing_previous = temp->routing_previous;
 
+        // fix previous Pointer.
+        if (temp->routing_previous != NULL)
+            temp->routing_previous->routing_next = temp->routing_next;
 
-
-
-	AVL_node* left_right(AVL_node* parent)					// Function of left Right Rotation
-	{
-		AVL_node* t;
-		t = parent->left_child;
-		parent->left_child = SingleRotateWithRight(t);
-		cout << "Left-Right Rotation";
-		return SingleRotateWithLeft(parent);
-	}
-
-	AVL_node* right_left(AVL_node* parent)					// Function of Right Left Rotation
-	{
-		AVL_node* t;
-		t = parent->right_child;
-		parent->right_child = SingleRotateWithLeft(t);
-		cout << "Right-Left Rotation";
-		return SingleRotateWithRight(parent);
-	}
-
-	AVL_node* insert(AVL_node* root, int v)					// Function of Inserting new node
-	{
-		if (root == NULL)
-		{
-			root = new AVL_node;
-			root->value = v;
-			root->left_child = NULL;
-			root->right_child = NULL;
-			return root;
-		}
-		else if (v < root->value)
-		{
-			root->left_child = insert(root->left_child, v);
-			root = balance_calculate(root);
-		}
-		else if (v >= root->value)
-		{
-			root->right_child = insert(root->right_child, v);
-			root = balance_calculate(root);
-		}
-		return root;
-	}
-
-
-	AVL_node* balance_calculate(AVL_node* t)
-	{
-		int bal_factor = difference(t);
-		if (bal_factor > 1)
-		{
-			if (difference(t->left_child) > 0)
-				t = SingleRotateWithLeft(t);
-			else
-				t = left_right(t);
-		}
-		else if (bal_factor < -1)
-		{
-			if (difference(t->right_child) > 0)
-				t = right_left(t);
-			else
-				t = SingleRotateWithRight(t);
-		}
-		return t;
-	}
-
-	int difference(AVL_node* t)
-	{
-		int l_height = Height(t->left_child);
-		int r_height = Height(t->right_child);
-		int b_factor = l_height - r_height;
-		return b_factor;
-	}
-
-
-	void show(AVL_node* p, int l)
-	{
-		int i;
-		if (p != NULL)
-		{
-			show(p->right_child, l + 1);
-			cout << " ";
-			if (p == root)
-			{
-				cout << "Root : ";
-			}
-			for (i = 0; i < l && p != root; i++)
-			{
-				cout << " ";
-			}
-			cout << p->value;
-			show(p->left_child, l + 1);
-		}
-	}
-
-	void inorder(AVL_node* t)
-	{
-		if (t == NULL)
-		{
-			return;
-		}
-
-		inorder(t->left_child);
-		cout << t->value << " ";
-		inorder(t->right_child);
-	}
-	void preorder(AVL_node* t)
-	{
-		if (t == NULL)
-		{
-			return;
-		}
-
-		cout << t->value << " ";
-		preorder(t->left_child);
-		preorder(t->right_child);
-	}
-	void postorder(AVL_node* t)
-	{
-		if (t == NULL)
-		{
-			return;
-		}
-
-		postorder(t->left_child);
-		postorder(t->right_child);
-		cout << t->value << " ";
-	}
-
-
-
-
-	void show_in_file(AVL_node* p, int l)
-	{
-		fstream file;
-		file.open("data.txt", ios::app);
-		int i;
-		if (p != NULL)
-		{
-			show_in_file(p->right_child, l + 1);
-			//cout << " ";
-			if (p == root)
-			{
-				//cout << "Root : ";
-			}
-			for (i = 0; i < l && p != root; i++)
-			{
-				//cout << " ";
-			}
-			file << p->id<<endl;
-			cout << p->id;
-			//cout << endl;
-			file << p->value<<endl;
-			cout << p->value;
-			//cout << endl;
-            file << p->new_value <<endl;
-			cout << p->value;
-
-
-			show_in_file(p->left_child, l + 1);
-		}
-	}
-
-
-
-
-
-
+        delete temp;
+    }
+    // Find an index and change it's correcsponding Value..
+    void change_value_at_index(int idx, int new_number)
+    {
+        // Find that Particular Node
+        Routing_table_node *temp = head;
+        while (temp->routing_index != idx)
+        {
+            temp = temp->routing_next;
+        }
+        temp->routing_number = new_number;
+    }
+    // this is simply a Function to display the Double Linked List of the Routing Tab
+    void display_routing_table()
+    {
+        Routing_table_node *temp;
+        temp = head;
+        while (temp != NULL)
+        {
+            cout << " \nRouting Index: " << temp->routing_index << " :: "
+                 << "Routing Value: "
+                 << "::" << temp->routing_number;
+            temp = temp->routing_next;
+        }
+    }
 };
-
-
 
 int main()
 {
+    Routing_table_linked_list list;
+    list.insert_At_start(1, 2);
+    list.insert_At_start(2, 2);
+    list.insert_At_start(3, 2);
+    list.insert_At_start(4, 2);
+    list.insert_At_start(5, 2);
+    list.insert_the_node_at_correct_index(7, 2, 2);
 
-	AVL_node* root = NULL;
-	AVL obj1;
+    list.insert_At_start(4, 2);
 
-	int c, i;
-	while (1) {
-		cout << "1.Insert Element into the tree" << endl;
-		cout << "2.show Balanced AVL Tree" << endl;
-		cout << "3.InOrder traversal" << endl;
-		cout << "4.PreOrder traversal" << endl;
-		cout << "5.PostOrder traversal" << endl;
-		cout << "6.Open in file" << endl;
-		cout << "7.Exit" << endl;
-		cout << "Enter your Choice: ";
-		cin >> c;
-		switch (c) {
-		case 1:
-			cout << "Enter value to be inserted: ";
-			cin >> i;
-			root = obj1.insert(root, i);
-			break;
-		case 2:
-			if (root == NULL) {
-				cout << "Tree is Empty" << endl;
-				continue;
-			}
-			cout << "Balanced AVL Tree:" << endl;
-			obj1.show(root, 1);
-			cout << endl;
-			break;
-		case 3:
-			cout << "Inorder Traversal:" << endl;
-			obj1.inorder(root);
-			cout << endl;
-			break;
-		case 4:
-			cout << "Preorder Traversal:" << endl;
-			obj1.preorder(root);
-			cout << endl;
-			break;
-		case 5:
-			cout << "Postorder Traversal:" << endl;
-			obj1.postorder(root);
-			cout << endl;
-			break;
-		case 6:
-			cout << "Opening File: " << endl;
-			obj1.show_in_file(root,1);
-			cout << endl;
-			break;
+    list.change_value_at_index(7,7);
+        list.delete_the_given_index_node(1);
+    list.delete_the_given_index_node(7);
+    list.delete_the_given_index_node(4);
+      list.delete_the_given_index_node(4);
+        list.delete_the_given_index_node(5);
+          list.delete_the_given_index_node(3);
+            list.delete_the_given_index_node(2);
 
-		case 7:
-			exit(1);
-		default:
-			cout << "Wrong Choice" << endl;
-		}
-	}
-	return 0;
+            cout << "\n No exp";
+    list.display_routing_table();
+
+    return 0;
 }
