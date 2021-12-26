@@ -2,11 +2,12 @@
 #include <fstream>
 #include <string>
 using namespace std;
+struct circular_linked_list_node;
 
 struct AVL_node // AVL_Node created to traverse in AVL tree
 {
-    int height;  // To calculate the height factor for balancing AVL
-    int id;      // Id of the corresponding value
+    int height; // To calculate the height factor for balancing AVL
+    // int id;      // Id of the corresponding value
     int value;   // The value which user entered with respect to that Id
     int line_no; // Line no. at which this value is placed in file
     string new_value;
@@ -15,7 +16,6 @@ struct AVL_node // AVL_Node created to traverse in AVL tree
 
     AVL_node() // Default Constructor
     {
-        id = 0;
         value = 0;
         left_child = NULL;
         right_child = NULL;
@@ -88,12 +88,11 @@ public:
         return SingleRotateWithRight(parent);
     }
 
-    AVL_node *insert(AVL_node *temp, int id, int data, string new_val) // Function of Inserting new node
+    AVL_node *insert(AVL_node *temp, int data, string new_val) // Function of Inserting new node
     {
         if (temp == NULL)
         {
             temp = new AVL_node;
-            temp->id = id;
             temp->value = data;
             temp->new_value = new_val;
             temp->left_child = NULL;
@@ -102,12 +101,12 @@ public:
         }
         else if (data < temp->value)
         {
-            temp->left_child = insert(temp->left_child, id, data, new_val);
+            temp->left_child = insert(temp->left_child, data, new_val);
             temp = balance_calculate(temp);
         }
         else if (data >= temp->value)
         {
-            temp->right_child = insert(temp->right_child, id, data, new_val);
+            temp->right_child = insert(temp->right_child, data, new_val);
             temp = balance_calculate(temp);
         }
         return temp;
@@ -156,12 +155,38 @@ public:
             {
                 cout << " ";
             }
-            cout << p->id << " Value: " << p->value << " "
+            cout << " Value: " << p->value << " "
                  << "  string:" << p->new_value;
             show(p->left_child, l + 1);
         }
     }
 
+    void return_number_of_tree_node(AVL_node *t, int &count)
+    {
+        if (t == NULL)
+        {
+            return;
+        }
+        return_number_of_tree_node(t->left_child, count);
+        // Here i have the access to the elements..
+        count++;
+        return_number_of_tree_node(t->right_child, count);
+    }
+
+    void deleteTree(AVL_node *rooty)
+    {
+        if (rooty == NULL)
+            return;
+
+        /* first delete both subtrees */
+        deleteTree(rooty->left_child);
+        deleteTree(rooty->right_child);
+
+        /* then delete the node */
+        cout << "\n Deleting node: " << rooty->value << "   string: " << rooty->new_value << 
+         "   ";
+        delete rooty;
+    }
     void inorder(AVL_node *t)
     {
         if (t == NULL)
@@ -196,43 +221,60 @@ public:
         cout << t->value << " ";
     }
 
-    void show_in_file(AVL_node *p, int l)
+    void show_in_file(AVL_node *p, int machine_id)
     {
+        if (p == NULL)
+        {
+            return;
+        }
+
+
+        show_in_file(p->left_child,machine_id);
 
         int number_of_lines = 0;
         string line;
-        ifstream myfile("data.txt");
-
-        while (getline(myfile, line))
-            ++number_of_lines;
-        number_of_lines = number_of_lines + 3;
-
-        fstream file;
-        file.open("data.txt", ios::app);
-        int i;
-        if (p != NULL)
+         string name = to_string(machine_id) + "-data.txt";
+        cout << " Nmae is " << name << " ";
+        ifstream myfile;
+        myfile.open(name,ios::app);
+        if (!myfile)
         {
-            show_in_file(p->right_child, l + 1);
-            // cout << " ";
-            if (p == root)
-            {
-                // cout << "Root : ";
-            }
-            for (i = 0; i < l && p != root; i++)
-            {
-                // cout << " ";
-            }
-            file << p->id << endl;
-            cout << p->id;
-            // for the line
-            p->line_no = number_of_lines;
-            file << p->line_no << endl;
-            cout << number_of_lines;
-            // cout << endl;
-            file << p->new_value << endl;
-            cout << p->new_value;
-            show_in_file(p->left_child, l + 1);
+            cout << "\n Unable to Open file \n";
         }
+        else
+        {
+            while (getline(myfile, line))
+                ++number_of_lines;
+            number_of_lines = number_of_lines + 3;
+        }
+       
+
+        fstream obj1;
+        obj1.open(name,ios::app);
+        if (!obj1)
+        {
+            cout << "\n Unavle to open obj1 \n";
+        }
+        else
+        {
+            int i;
+            if (p != NULL)
+            {
+                obj1 << p->value << endl;
+                cout << "\n AM RUNNING YARRRRR \n";
+                cout << p->value;
+                // for the line
+                p->line_no = number_of_lines;
+                obj1 << p->line_no << endl;
+                cout << number_of_lines;
+                // cout << endl;
+                obj1 << p->new_value << endl;
+                cout << p->new_value;
+               
+            }
+        }
+        obj1.close();
+        show_in_file(p->right_child,machine_id);
     }
 };
 

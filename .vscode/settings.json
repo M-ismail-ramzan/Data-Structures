@@ -3,6 +3,9 @@
         "iostream": "cpp",
         "xutility": "cpp",
         "ostream": "cpp",
-        "xstring": "cpp"
+        "xstring": "cpp",
+        "xiosbase": "cpp",
+        "system_error": "cpp",
+        "xlocale": "cpp"
     }
 }
