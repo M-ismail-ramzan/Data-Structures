@@ -198,6 +198,19 @@ public:
         cout << t->value << " ";
         inorder(t->right_child);
     }
+    // A function that searchs for the key value's IN the tree
+    void find_a_key(AVL_node *rooty,int key){
+        if(rooty == NULL)
+        return;
+        find_a_key(rooty->left_child,key);
+        
+        if(rooty->value == key){
+            cout << "\n-----------Key Found -------------\n";
+            cout << " Key : " << key << "  Value: " << rooty->new_value << "  \n";
+        }
+        find_a_key(rooty->right_child,key);
+        
+    }
     void preorder(AVL_node *t)
     {
         if (t == NULL)

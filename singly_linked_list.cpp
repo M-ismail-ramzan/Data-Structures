@@ -223,6 +223,13 @@ public:
         }
         return false;
     }
+    // Return me head machine id
+    int get_head_machine_id(){
+        if(last->next != NULL)
+        return last->next->machine_id;
+        else 
+        return NULL;
+    }
     // This function looks into the doubly of each Node and check's where we need to store the data
     circular_linked_list_node *find_storage_machine(int data_id, int start_machine_id, int bit_size)
     {
@@ -260,7 +267,7 @@ public:
             // call the Function from this machine and check it's routing index
             circular_linked_list_node *temp2 = temp->route_table.finding_next_machine(start_machine_id, data_id, bit_size, temp);
             if (temp2 != temp)
-                cout << "\nWe are Travelled to Machine: " << temp2->machine_id;
+                cout << "\n Travelled to Machine --> " << temp2->machine_id;
             else
             {
                 cout << "\nFOUND!!!!";
@@ -271,7 +278,7 @@ public:
             temp = temp2;
         }
 
-        cout << "This Machine is active: --> " << temp->machine_id << "\n";
+        cout << "\nThis Machine is active: --> " << temp->machine_id << "\n";
         return temp;
     }
     // This function takes in machine id and display the avl tree of the machine
@@ -699,10 +706,10 @@ int main()
     {
         cout << "\n Please specify the Operation that You want to Perform \n";
         cout << "1) Add A Machine into the System [o]";
-        cout << "\n2) Remove A Machine from the System [x]";
-        cout << "\n3) Insert a Key,Value Pair into Machine [O]";
-        cout << "\n4) Search for Key Into the Differenet Machine ";
-        cout << "\n5) Delete the Key from the Machine";
+        cout << "\n2) Remove A Machine from the System [o]";
+        cout << "\n3) Insert a Key,Value Pair into Machine [o]";
+        cout << "\n4) Search for Key Into the AVL Tree (Machines) [o]";
+        cout << "\n5) Delete the Key from the Machine [x] ";
         cout << "\n6) Print Routing Table of any machine Id [o] ";
         cout << "\n7) Print the Avl  tree of the Machine [o]";
         cout << "\n8) See machines id;s ";
@@ -858,6 +865,15 @@ int main()
         case 4:
         {
             cout << "\n Search the Value from the System\n";
+            // Now i need to Travel through the Routing table and find where the key is stored on the system..
+            cout << "\n Please Enter the Key to Seach for \n";
+            int data_id=0;
+            cin >> data_id;
+            data_id = hash_function(data_id,max_range_of_machine);
+             circular_linked_list_node *temp = NULL;
+            temp = Machines.find_storage_machine(data_id,Machines.get_head_machine_id(),bit_size);
+            // Now we will Traverse the Avl tree of them Temp..
+            temp->avl_tree.find_a_key(temp->avl_root,data_id);
         }
         break;
         case 6:
