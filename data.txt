@@ -1,4 +1,3 @@
 12
-65
-0
-welcome to my prgrams!!
+3
+welcome

@@ -3,12 +3,14 @@
 #include <time.h>
 #include "./routing_table.h"
 #include "./avl_Tree.h"
+
 using namespace std;
 
 struct circular_linked_list_node
 {
     // avl tree fro storing the data...
     AVL avl_tree;
+    AVL_node *avl_root = NULL;
     // A routing_Table_in_each_machine
     Routing_table_linked_list route_table;
     int machine_id;
@@ -252,6 +254,56 @@ public:
         cout << "This Machine is active: --> " << temp->machine_id << "\n";
         return temp;
     }
+    // This function takes in machine id and display the avl tree of the machine
+    void display_me_avl_machine(int machine_id)
+    {
+        circular_linked_list_node *temp;
+        temp = last->next;
+        do
+        {
+            if (machine_id == temp->machine_id)
+            {
+                // store the machine id in temp from where we need to start searching
+                break;
+            }
+            temp = temp->next;
+        } while (temp != last->next);
+        // Let's take a look at It's Routing table..
+        cout << "\n AVL Tree of this Machine is \n";
+        temp->avl_tree.show(temp->avl_root, 1);
+    }
+    // This functions takes in the machine id and display the Routing table
+    void display_me_routing_table_of_temp_id(int machine_id)
+    {
+
+        circular_linked_list_node *temp;
+        temp = last->next;
+        do
+        {
+            if (machine_id == temp->machine_id)
+            {
+                // store the machine id in temp from where we need to start searching
+                break;
+            }
+            temp = temp->next;
+        } while (temp != last->next);
+        // Let's take a look at It's Routing table..
+        cout << "\n Routing table of this Machine is \n";
+        temp->route_table.display_routing_table();
+    }
+    // This function returns the Number of Machine into the system
+    int return_number_of_machine_currently()
+    {
+        int count = 0;
+        circular_linked_list_node *temp;
+        temp = last->next;
+        do
+        {
+            count++;
+            temp = temp->next;
+        } while (temp != last->next);
+        return count;
+    }
     // This function Traverse Each Node in the Machine and Fill the Routing table.
     void fill_routing_table(int no_of_machines, int max_range_of_machine, int bit_Size)
     {
@@ -475,66 +527,146 @@ int main()
     // Until this Point. All the machines has been made and the Routing tables are inserted as well.
     // Now we will ask the user Key,value Pair and will store them in the Avl tree and will identify that
     // which machine is responsible for storing the data..
-    cout << "\n Please specify the Operation that You want to Perform \n";
-    cout << " 1) Add A Machine into the System";
-    cout << "\n2) Remove A Machine from the System";
-    cout << "\n3) Insert a Key,Value Pair into Machine";
-    cout << "\n4) Search for Key Into the Differenet Machine";
-    cout << "\n5) Delete the Key from the Machine";
-    cout << "\n6) Print Routing Table of any machine Id";
-    cout << "\n7) Print the Avl  tree of the Machine ";
-    choice = 0;
-    cin >> choice;
-    switch (choice)
+    do
     {
-    case 1:
-    {
-        cout << "\n Add Machine \n";
-    }
-    break;
+        cout << "\n Please specify the Operation that You want to Perform \n";
+        cout << "1) Add A Machine into the System [o]";
+        cout << "\n2) Remove A Machine from the System [x]";
+        cout << "\n3) Insert a Key,Value Pair into Machine [O]";
+        cout << "\n4) Search for Key Into the Differenet Machine ";
+        cout << "\n5) Delete the Key from the Machine";
+        cout << "\n6) Print Routing Table of any machine Id [o] ";
+        cout << "\n7) Print the Avl  tree of the Machine [o]";
+        cout << "\n8) Exit\nEnter:";
+        choice = 0;
+        cin >> choice;
+        switch (choice)
+        {
+        case 1:
+        {
+            cout << "\n Add Machine \n";
+            cout << "--- Checking Range --- ";
+            cout << "\n Number of Machines Possible: " << max_range_of_machine << "\n";
+            cout << "\n Id's From Range 0 to " << max_range_of_machine - 1 << "\n";
+            int count = Machines.return_number_of_machine_currently();
+            cout << "\n Number of machines Now into the system : " << count << "\n";
+            int test = max_range_of_machine - count;
+            if (test > 0)
+            {
+                cout << "\n There is space into the System. You can create New Machine";
 
-    case 2:
-    {
-        cout << "\n Remove Machine \n";
-    }
-    break;
+                cout << "\n Id's From Range 0 to " << max_range_of_machine - 1 << "\n";
+                cout << "\n Please Enter the Id of the New Machine: ";
+                int mac_id = 0;
+                cin >> mac_id;
+                // we have to check user do not enter repeated or Already exist id..
+                while (true)
+                {
+                    // cheaking weather the id is repeated or not!!!
+                    bool is_machine_already_present = Machines.check_if_machine_present(mac_id);
+                    // if machine is already present..
+                    if (is_machine_already_present)
+                    {
+                        cout << "\n Machine id is already in the list.. \n Enter Again:";
+                        cin >> mac_id;
+                    }
+                    else if (mac_id <= -1 || mac_id >= (max_range_of_machine - 1))
+                    {
+                        cout << "\n You have Entered Id which is not In Range..\nEnter Again: ";
+                        cin >> mac_id;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
 
-    case 3:
-    {
-        cout << "\n Insert the Value into the System \n";
-        int data_id = 0;
-        int start_machine_id = 0;
-        cout << "\n Please Enter the key(Must be integer): ";
-        cin >> data_id;
-        // Now we will calculte the Hash of the key
-        data_id = hash_function(data_id, max_range_of_machine);
-        cout << "\n Data Id After Hashing: " << data_id << "\n";
-        cout << "\n Please Enter the Value \n";
-        string data = "welcome to my prgrams!!";
-        cout << "\n Start Search From Which Machine Number :";
-        cin >> start_machine_id;
-
-        // Now i need to use Routing Table to identify to which machine i need to look at!!!
-        circular_linked_list_node *temp=NULL;
-        temp = Machines.find_storage_machine(data_id, start_machine_id, bit_size);
-        // Now we can store that data into the temp Node..
-        AVL_node *root = NULL;
-        root = temp->avl_tree.insert(root, data_id, 65 ,data);
-        temp->avl_tree.show_in_file(root,1);
-        temp->avl_tree.show(root,1);
-    }
-    break;
-
-    case 4:
-    {
-        cout << "\n Search the Value from the System\n";
-    }
-    break;
-
-    default:
-        cout << "\n Invalid Input \n";
+                // Now we have tested all the things.. let's create the machine
+                Machines.insert_ascending_order(mac_id);
+                cout << " Machine with " << mac_id << " is Generated Successfully\n";
+                number_of_machine++;
+                // Display me the Final Linked List....
+                cout << "\n Following are the Machines Made \n";
+                Machines.display_machine_nodes();
+                cout << "\n Updating Routing Tables \n";
+                Machines.fill_routing_table(number_of_machine, (max_range_of_machine - 1), bit_size);
+            }
+            else
+            {
+                cout << "\n No space Avaliable for New Machine";
+            }
+        }
         break;
-    }
+
+        case 2:
+        {
+            cout << "\n Remove Machine \n";
+        }
+        break;
+
+        case 3:
+        {
+            cout << "\n Insert the Value into the System \n";
+            int data_id = 0;
+            int start_machine_id = 0;
+            cout << "\n Please Enter the key(Must be integer): ";
+            cin >> data_id;
+            // Now we will calculte the Hash of the key
+            data_id = hash_function(data_id, max_range_of_machine);
+            cout << "\n Data Id After Hashing: " << data_id << "\n";
+            cout << "\n Please Enter the Value: ";
+            string data = "welcome to my prgrams!!";
+            cin.ignore();
+            getline(cin, data);
+            cout << "\n Start Search From Which Machine Number :";
+            cin >> start_machine_id;
+
+            // Now i need to use Routing Table to identify to which machine i need to look at!!!
+            circular_linked_list_node *temp = NULL;
+            temp = Machines.find_storage_machine(data_id, start_machine_id, bit_size);
+            // Now we can store that data into the temp Node..
+
+            temp->avl_root = temp->avl_tree.insert(temp->avl_root, data_id, 65, data);
+            temp->avl_tree.show_in_file(temp->avl_root, 1);
+            temp->avl_tree.show(temp->avl_root, 1);
+        }
+        break;
+
+        case 4:
+        {
+            cout << "\n Search the Value from the System\n";
+        }
+        break;
+        case 6:
+        {
+            int temp_id = 0;
+            cout << "Please Enter the Id of the Machine for: ";
+            cin >> temp_id;
+            // this Function display's the Routing table of any machine..
+            Machines.display_me_routing_table_of_temp_id(temp_id);
+            // Now we will traverse the machines to find out it's lcocation
+
+            break;
+        }
+        case 7:
+        {
+            int temp_id = 0;
+            cout << "Please Enter the Id of the Machine for ";
+            cin >> temp_id;
+
+            Machines.display_me_avl_machine(temp_id);
+            break;
+        }
+        case 8:
+        {
+            cout << "\n Thanks for using our system \n";
+            break;
+        }
+        default:
+            cout << "\n Invalid Input \n";
+            break;
+        }
+    } while (!(choice == 8));
 
     return 0;
 }
