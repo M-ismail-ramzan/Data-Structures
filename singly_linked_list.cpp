@@ -11,25 +11,25 @@ struct circular_linked_list_node
 {
     // avl tree fro storing the data...
     AVL avl_tree;
-    AVL_node* avl_root = NULL;
+    AVL_node *avl_root = NULL;
     // A routing_Table_in_each_machine
     Routing_table_linked_list route_table;
     int machine_id;
     // a pointer to point on the next Machine
-    circular_linked_list_node* next;
+    circular_linked_list_node *next;
 };
 
 class circular_linked_list
 {
     // Pointers are made for the circular linked list.
-    circular_linked_list_node* head = NULL;
-    circular_linked_list_node* last = NULL;
+    circular_linked_list_node *head = NULL;
+    circular_linked_list_node *last = NULL;
 
 public:
     void insert_when_empty(int new_machine_id)
     {
         // allocate memory for node
-        circular_linked_list_node* temp = new circular_linked_list_node();
+        circular_linked_list_node *temp = new circular_linked_list_node();
 
         // Adding the machine_id
         temp->machine_id = new_machine_id;
@@ -57,7 +57,7 @@ public:
             return;
         }
         // Now let's travsere and find the Correct Position of the Inseration
-        circular_linked_list_node* temp, * temp2;
+        circular_linked_list_node *temp, *temp2;
         // pOintes to the first element
         temp2 = last->next;
         temp = last;
@@ -93,7 +93,7 @@ public:
         }
 
         // else create a new node
-        circular_linked_list_node* temp = new circular_linked_list_node();
+        circular_linked_list_node *temp = new circular_linked_list_node();
 
         // Assign the machine_id to the new Node...
         temp->machine_id = new_machine_id;
@@ -111,7 +111,7 @@ public:
             return;
         }
 
-        circular_linked_list_node* temp, * temp2;
+        circular_linked_list_node *temp, *temp2;
         // pOintes to the first element
         temp2 = last->next;
         do
@@ -145,7 +145,7 @@ public:
     // traverse the circular linked list
     void display_machine_nodes()
     {
-        circular_linked_list_node* temp;
+        circular_linked_list_node *temp;
 
         // If list is empty, return.
         if (last == NULL)
@@ -178,19 +178,38 @@ public:
         }
 
         // else create a new node
-        struct circular_linked_list_node* temp = new circular_linked_list_node;
+        struct circular_linked_list_node *temp = new circular_linked_list_node;
 
         // set new machine_id to node
         temp->machine_id = new_machine_id;
         temp->next = last->next;
         last->next = temp;
     }
+
+    circular_linked_list_node *get_the_machine_to_be_deleted(int test_machine_id)
+    {
+        if (last != NULL)
+        {
+            circular_linked_list_node *temp;
+            temp = last->next;
+            do
+            {
+
+                if (test_machine_id == temp->machine_id)
+                {
+                    return temp;
+                }
+                temp = temp->next;
+            } while (temp != last->next);
+        }
+        return NULL;
+    }
     // This function check's weather the machine id is already their or not !!
     bool check_if_machine_present(int test_machine_id)
     {
         if (last != NULL)
         {
-            circular_linked_list_node* temp;
+            circular_linked_list_node *temp;
             temp = last->next;
             do
             {
@@ -205,7 +224,7 @@ public:
         return false;
     }
     // This function looks into the doubly of each Node and check's where we need to store the data
-    circular_linked_list_node* find_storage_machine(int data_id, int start_machine_id, int bit_size)
+    circular_linked_list_node *find_storage_machine(int data_id, int start_machine_id, int bit_size)
     {
         // Now we need to identify which machine we need to visit.
         // steps::::::::::::::::
@@ -214,7 +233,7 @@ public:
         //  Make a function that traverse the doubly linked list... and we pass him the index and it return's the address of that index so we can move to that machine...
         //
 
-        circular_linked_list_node* temp;
+        circular_linked_list_node *temp;
         temp = last->next;
         do
         {
@@ -239,12 +258,12 @@ public:
         while (true)
         {
             // call the Function from this machine and check it's routing index
-            circular_linked_list_node* temp2 = temp->route_table.finding_next_machine(start_machine_id, data_id, bit_size, temp);
+            circular_linked_list_node *temp2 = temp->route_table.finding_next_machine(start_machine_id, data_id, bit_size, temp);
             if (temp2 != temp)
                 cout << "\nWe are Travelled to Machine: " << temp2->machine_id;
             else
             {
-                cout << "FOUND!!!!";
+                cout << "\nFOUND!!!!";
                 break;
             }
             // First of all let's check is the Pointer right orr not ?
@@ -258,7 +277,7 @@ public:
     // This function takes in machine id and display the avl tree of the machine
     void display_me_avl_machine(int machine_id)
     {
-        circular_linked_list_node* temp;
+        circular_linked_list_node *temp;
         temp = last->next;
         do
         {
@@ -277,7 +296,7 @@ public:
     void display_me_routing_table_of_temp_id(int machine_id)
     {
 
-        circular_linked_list_node* temp;
+        circular_linked_list_node *temp;
         temp = last->next;
         do
         {
@@ -296,7 +315,7 @@ public:
     int return_number_of_machine_currently()
     {
         int count = 0;
-        circular_linked_list_node* temp;
+        circular_linked_list_node *temp;
         temp = last->next;
         do
         {
@@ -309,7 +328,7 @@ public:
     void delete_routes(int bit_size)
     {
 
-        circular_linked_list_node* temp;
+        circular_linked_list_node *temp;
         temp = last->next;
         do
         {
@@ -320,10 +339,76 @@ public:
             temp = temp->next;
         } while (temp != last->next);
     }
+    // a function that takes in the node to be deleted and delete it
+    void del(circular_linked_list_node *node_to_be_deleted)
+    {
+        circular_linked_list_node *temp2;
+        circular_linked_list_node *prev;
+        temp2 = last->next;
+        do
+        {
+            if (temp2->machine_id == node_to_be_deleted->machine_id)
+            {
+                break;
+            }
+            prev = temp2;
+            temp2 = temp2->next;
+        } while (temp2 != last->next);
+
+        circular_linked_list_node *temp;
+        temp = prev->next;
+        prev->next = temp->next;
+        delete temp;
+    }
+    // Assign the deleted Node values to other machines..
+    void assign_avl_values_of_machine_to_other(circular_linked_list_node *temp, int bit_size)
+    {
+
+        // Now we need to delete the Node...
+
+        fstream newfile;
+        string name = to_string(temp->machine_id) + "-data.txt";
+        newfile.open(name, ios::in); // open a file to perform read operation using file object
+        if (newfile.is_open())
+        { // checking whether the file is open
+            string line;
+            int count = 0;
+            int data_id = 0;
+            string data = "";
+            while (getline(newfile, line)) // Read data from the file..
+            {
+
+                if (count == 0)
+                {
+                    data_id = stoi(line);
+                }
+                // Each avl entry has 3 values... id,value,line no;
+                if (count == 2)
+                {
+                    data = line;
+                    circular_linked_list_node *tempy = NULL;
+                    tempy = this->find_storage_machine((data_id), last->next->machine_id, bit_size);
+                    if (tempy != NULL)
+                        tempy->avl_root = tempy->avl_tree.insert(tempy->avl_root, data_id, data);
+                    // creating the file
+                    this->create_temp_file(tempy->machine_id);
+                    tempy->avl_tree.show_in_file(tempy->avl_root, tempy->machine_id);
+                    tempy->avl_tree.show(tempy->avl_root, 1);
+                    count = 0;
+                }
+
+                count++;
+
+                cout << line << "\n"; // print the data of the string
+            }
+            newfile.close(); // close the file object.
+        }
+    }
+
     // This function will fix the avl trees for all the machines..
     void fix_the_avl_trees(int bit_size)
     {
-        circular_linked_list_node* temp;
+        circular_linked_list_node *temp;
         temp = last->next;
         do
         {
@@ -347,20 +432,18 @@ public:
                     {
                         data_id = stoi(line);
                     }
-                    else if (count == 1)
-                    {
-                        data = line;
-                    }
                     // Each avl entry has 3 values... id,value,line no;
                     if (count == 2)
                     {
-                        circular_linked_list_node* temp = NULL;
-                        temp = this->find_storage_machine(stoi(line), temp->machine_id, bit_size);
-                        temp->avl_root = temp->avl_tree.insert(temp->avl_root, data_id, data);
+                        data = line;
+                        circular_linked_list_node *tempy = NULL;
+                        tempy = this->find_storage_machine((data_id), last->next->machine_id, bit_size);
+                        if (tempy != NULL)
+                            tempy->avl_root = tempy->avl_tree.insert(tempy->avl_root, data_id, data);
                         // creating the file
-                        this->create_temp_file(temp->machine_id);
-                        temp->avl_tree.show_in_file(temp->avl_root, temp->machine_id);
-                        temp->avl_tree.show(temp->avl_root, 1);
+                        this->create_temp_file(tempy->machine_id);
+                        tempy->avl_tree.show_in_file(tempy->avl_root, tempy->machine_id);
+                        tempy->avl_tree.show(tempy->avl_root, 1);
                         count = 0;
                     }
 
@@ -395,7 +478,7 @@ public:
         // First of all .. Each machine will have the max number of machine as index's of the Routing table..
 
         // We need to Traverse the Each Node...
-        circular_linked_list_node* temp, * temp2;
+        circular_linked_list_node *temp, *temp2;
         // pOintes to the first element
         temp2 = last->next;
         // This loop will run for all the machines..
@@ -478,7 +561,7 @@ int main()
     srand(time(0));
     // Ask User the Number of Bits he wants to Store...
     int bit_size = 0;
-    cout << "\n Please Specify the Number of Bits u want to Store:";
+    cout << "\n\n Please Specify the Number of Bits u want to Store:";
     cin >> bit_size;
 
     int max_range_of_machine = pow(2, (bit_size));
@@ -686,6 +769,7 @@ int main()
                 3 -->  Insert Function will find the new Positions and will save the
                        data..
                 */
+
                 cout << "\n Fixing the AVL trees of the Machines \n";
                 Machines.fix_the_avl_trees(bit_size);
             }
@@ -717,9 +801,21 @@ int main()
                 //
                 if (is_exist)
                 {
-                    // we can delete the machine
-                    //  1) Delete the doubly inside the machine...
-                    //  2) Avl tree adhustment..
+                    // Find the node of the machine..
+                    circular_linked_list_node *tmp;
+                    AVL obj;
+                    tmp = Machines.get_the_machine_to_be_deleted(mac_id);
+                    // First save the avl tree in some temp of this machine
+                    // Now we need to open file
+                    tmp->avl_tree.deleteTree(tmp->avl_root);
+                    Machines.del(tmp);
+                    // First of all i need to delete the Previous One..
+                    Machines.delete_routes(bit_size);
+                    cout << "\n Updating Routing Tables \n";
+                    Machines.fill_routing_table(number_of_machine, (max_range_of_machine - 1), bit_size);
+                    Machines.assign_avl_values_of_machine_to_other(tmp, bit_size);
+                    // Now obj has the tree... We need to get the data and insert it into the machine
+                    // we have the data into file as well.. Let's read from there.
                 }
                 else
                 {
@@ -747,7 +843,7 @@ int main()
             cin >> start_machine_id;
 
             // Now i need to use Routing Table to identify to which machine i need to look at!!!
-            circular_linked_list_node* temp = NULL;
+            circular_linked_list_node *temp = NULL;
             temp = Machines.find_storage_machine(data_id, start_machine_id, bit_size);
             // Now we can store that data into the temp Node..
 
