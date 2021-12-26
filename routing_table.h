@@ -62,7 +62,7 @@ public:
 
             // special check for the Roooooot
 
-            if (data_id <= machine_id && temp->routing_previous->routing_number >= data_id)
+            if (data_id <= machine_id)
             {
                 // this is true for all machines except root!!
                 return circular_temp;

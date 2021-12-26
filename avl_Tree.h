@@ -198,6 +198,130 @@ public:
         cout << t->value << " ";
         inorder(t->right_child);
     }
+    // find the minimum value
+    AVL_node* minValueNode(AVL_node* node)
+    {
+        AVL_node* current = node;
+
+        /* loop down to find the leftmost leaf */
+        while (current->left_child != NULL)
+            current = current->left_child;
+
+        return current;
+    }
+    //AVL Tree
+
+
+    AVL_node* deleteNode(AVL_node* root, int key)               // Function of Deleting any key value pair from AVL tree
+    {
+
+        // STEP 1: PERFORM STANDARD BST DELETE
+        if (root == NULL)
+        {
+            return root;
+        }
+            
+
+        // If the key to be deleted is smaller
+        // than the root's key, then it lies
+        // in left subtree
+        if (key < root->value)
+        {
+            root->left_child = deleteNode(root->left_child, key);
+        }
+            
+
+        // If the key to be deleted is greater
+        // than the root's key, then it lies
+        // in right subtree
+        else if (key > root->value)
+        {
+            root->right_child = deleteNode(root->right_child, key);
+
+        }
+            
+
+        // if key is same as root's key, then
+        // This is the node to be deleted
+        else
+        {
+            // node with only one child or no child
+            if ((root->left_child == NULL) || (root->right_child == NULL))
+            {
+                AVL_node* temp = root->left_child ?
+                    root->left_child :
+                    root->right_child;
+
+                // No child case
+                if (temp == NULL)
+                {
+                    temp = root;
+                    root = NULL;
+                }
+                else // One child case
+                    *root = *temp; // Copy the contents of
+                                   // the non-empty child
+                delete temp;
+            }
+            else
+            {
+                // node with two children: Get the inorder
+                // successor (smallest in the right subtree)
+                AVL_node* temp = minValueNode(root->right_child);
+
+                // Copy the inorder successor's
+                // data to this node
+                root->value = temp->value;
+                root->new_value=temp->new_value;
+
+                // Delete the inorder successor
+                root->right_child = deleteNode(root->right_child,temp->value);
+            }
+        }
+
+        // If the tree had only one node
+        // then return
+        if (root == NULL)
+            return root;
+
+        // STEP 2: UPDATE HEIGHT OF THE CURRENT NODE
+        root->height = 1 + max(Height(root->left_child), Height(root->right_child));
+
+        // STEP 3: GET THE BALANCE FACTOR OF
+        // THIS NODE (to check whether this
+        // node became unbalanced)
+        int balance = getBalance(root);
+
+        // If this node becomes unbalanced,
+        // then there are 4 cases
+
+        // Left Left Case
+        if (balance > 1 && getBalance(root->left_child) >= 0)
+            return SingleRotateWithRight(root);
+
+        // Left Right Case
+        if (balance > 1 && getBalance(root->left_child) < 0)
+        {
+            root->left_child = SingleRotateWithLeft(root->left_child);
+            return SingleRotateWithRight(root);
+        }
+
+        // Right Right Case
+        if (balance < -1 &&
+            getBalance(root->right_child) <= 0)
+            return SingleRotateWithLeft(root);
+
+        // Right Left Case
+        if (balance < -1 &&
+            getBalance(root->right_child) > 0)
+        {
+            root->right_child = SingleRotateWithRight(root->right_child);
+            return SingleRotateWithLeft(root);
+        }
+
+        return root;
+    }
+
     // A function that searchs for the key value's IN the tree
     void find_a_key(AVL_node *rooty,int key){
         if(rooty == NULL)
@@ -288,6 +412,134 @@ public:
         }
         obj1.close();
         show_in_file(p->right_child,machine_id);
+    }
+
+    AVL_node* deleteNode(AVL_node* root, string key)               // Function of Deleting any key value pair from AVL tree
+    {
+
+        // STEP 1: PERFORM STANDARD BST DELETE
+        if (root == NULL)
+        {
+            return root;
+        }
+            
+
+        // If the key to be deleted is smaller
+        // than the root's key, then it lies
+        // in left subtree
+        if (key < root->new_value)
+        {
+            root->left_child = deleteNode(root->left_child, key);
+        }
+            
+
+        // If the key to be deleted is greater
+        // than the root's key, then it lies
+        // in right subtree
+        else if (key > root->new_value)
+        {
+            root->right_child = deleteNode(root->right_child, key);
+
+        }
+            
+
+        // if key is same as root's key, then
+        // This is the node to be deleted
+        else
+        {
+            // node with only one child or no child
+            if ((root->left_child == NULL) || (root->right_child == NULL))
+            {
+                AVL_node* temp = root->left_child ?
+                    root->left_child :
+                    root->right_child;
+
+                // No child case
+                if (temp == NULL)
+                {
+                    temp = root;
+                    root = NULL;
+                }
+                else // One child case
+                    *root = *temp; // Copy the contents of
+                                   // the non-empty child
+                free(temp);
+            }
+            else
+            {
+                // node with two children: Get the inorder
+                // successor (smallest in the right subtree)
+                AVL_node* temp = minValueNode(root->right_child);
+
+                // Copy the inorder successor's
+                // data to this node
+                root->value = temp->value;
+
+                // Delete the inorder successor
+                root->right_child = deleteNode(root->right_child,temp->new_value);
+            }
+        }
+
+        // If the tree had only one node
+        // then return
+        if (root == NULL)
+            return root;
+
+        // STEP 2: UPDATE HEIGHT OF THE CURRENT NODE
+        root->height = 1 + max(Height(root->left_child), Height(root->right_child));
+
+        // STEP 3: GET THE BALANCE FACTOR OF
+        // THIS NODE (to check whether this
+        // node became unbalanced)
+        int balance = getBalance(root);
+
+        // If this node becomes unbalanced,
+        // then there are 4 cases
+
+        // Left Left Case
+        if (balance > 1 && getBalance(root->left_child) >= 0)
+            return SingleRotateWithRight(root);
+
+        // Left Right Case
+        if (balance > 1 && getBalance(root->left_child) < 0)
+        {
+            root->left_child = SingleRotateWithLeft(root->left_child);
+            return SingleRotateWithRight(root);
+        }
+
+        // Right Right Case
+        if (balance < -1 &&
+            getBalance(root->right_child) <= 0)
+            return SingleRotateWithLeft(root);
+
+        // Right Left Case
+        if (balance < -1 &&
+            getBalance(root->right_child) > 0)
+        {
+            root->right_child = SingleRotateWithRight(root->right_child);
+            return SingleRotateWithLeft(root);
+        }
+
+        return root;
+    }
+      void return_count_of_key(AVL_node *rooty,int key,int &count){
+        if(rooty == NULL)
+        return;
+        return_count_of_key(rooty->left_child,key,count);
+        
+        if(rooty->value == key){
+            cout << "\n-----------Keys Found -------------\n";
+            cout << " Key : " << key << "  Value: " << rooty->new_value << "  \n";
+        }
+        return_count_of_key(rooty->right_child,key,count);
+        
+    }
+    // a function for calculating the balance
+    int getBalance(AVL_node* N)
+    {
+        if (N == NULL)
+            return 0;
+        return Height(N->left_child) - Height(N->right_child);
     }
 };
 

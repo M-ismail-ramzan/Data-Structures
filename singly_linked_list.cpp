@@ -224,11 +224,12 @@ public:
         return false;
     }
     // Return me head machine id
-    int get_head_machine_id(){
-        if(last->next != NULL)
-        return last->next->machine_id;
-        else 
-        return NULL;
+    int get_head_machine_id()
+    {
+        if (last->next != NULL)
+            return last->next->machine_id;
+        else
+            return NULL;
     }
     // This function looks into the doubly of each Node and check's where we need to store the data
     circular_linked_list_node *find_storage_machine(int data_id, int start_machine_id, int bit_size)
@@ -709,7 +710,7 @@ int main()
         cout << "\n2) Remove A Machine from the System [o]";
         cout << "\n3) Insert a Key,Value Pair into Machine [o]";
         cout << "\n4) Search for Key Into the AVL Tree (Machines) [o]";
-        cout << "\n5) Delete the Key from the Machine [x] ";
+        cout << "\n5) Delete the Key from the Machine [o] ";
         cout << "\n6) Print Routing Table of any machine Id [o] ";
         cout << "\n7) Print the Avl  tree of the Machine [o]";
         cout << "\n8) See machines id;s ";
@@ -867,22 +868,54 @@ int main()
             cout << "\n Search the Value from the System\n";
             // Now i need to Travel through the Routing table and find where the key is stored on the system..
             cout << "\n Please Enter the Key to Seach for \n";
-            int data_id=0;
+            int data_id = 0;
             cin >> data_id;
-            data_id = hash_function(data_id,max_range_of_machine);
-             circular_linked_list_node *temp = NULL;
-            temp = Machines.find_storage_machine(data_id,Machines.get_head_machine_id(),bit_size);
+            data_id = hash_function(data_id, max_range_of_machine);
+            circular_linked_list_node *temp = NULL;
+            temp = Machines.find_storage_machine(data_id, Machines.get_head_machine_id(), bit_size);
             // Now we will Traverse the Avl tree of them Temp..
-            temp->avl_tree.find_a_key(temp->avl_root,data_id);
+            temp->avl_tree.find_a_key(temp->avl_root, data_id);
         }
         break;
+        case 5:
+        {
+
+            cout << "\n Please Enter the Key to Delete \n";
+
+            int data_id = 0;
+            cin >> data_id;
+            data_id = hash_function(data_id, max_range_of_machine);
+            circular_linked_list_node *temp = NULL;
+            temp = Machines.find_storage_machine(data_id, Machines.get_head_machine_id(), bit_size);
+            //
+            int count = 0;
+            temp->avl_tree.return_count_of_key(temp->avl_root, data_id, count);
+            cout << "\n There are total " << count << " Keys";
+            cout << "\n Please enter the value to Delete the Key/value Permanetly";
+            cin.ignore();
+            string val;
+            getline(cin, val);
+            temp->avl_root = temp->avl_tree.deleteNode(temp->avl_root, data_id);
+
+            break;
+        }
         case 6:
         {
             int temp_id = 0;
             cout << "Please Enter the Id of the Machine for: ";
             cin >> temp_id;
             // this Function display's the Routing table of any machine..
-            Machines.display_me_routing_table_of_temp_id(temp_id);
+             bool is_exist = Machines.check_if_machine_present(temp_id);
+            //
+            if (is_exist)
+            {
+               Machines.display_me_routing_table_of_temp_id(temp_id);
+            }
+            else
+            {
+                cout << "\n This Machine does not exist in the system \n";
+            }
+            
             // Now we will traverse the machines to find out it's lcocation
 
             break;
@@ -892,8 +925,17 @@ int main()
             int temp_id = 0;
             cout << "Please Enter the Id of the Machine for ";
             cin >> temp_id;
+            bool is_exist = Machines.check_if_machine_present(temp_id);
+            //
+            if (is_exist)
+            {
+                Machines.display_me_avl_machine(temp_id);
+            }
+            else
+            {
+                cout << "\n This Machine does not exist in the system \n";
+            }
 
-            Machines.display_me_avl_machine(temp_id);
             break;
         }
         case 8:
