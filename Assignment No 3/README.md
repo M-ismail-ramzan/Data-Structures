@@ -60,6 +60,8 @@ The path does not need to start or end at the root or a leaf, but it must go dow
 only from parent nodes to child nodes). The tree and value are passed as an argument to the 
 function. The path count is returned by the function.
 Sum of a path is the sum of all node values in that path. EXAMPLE Input:
+![image](https://user-images.githubusercontent.com/52560435/153755995-cdf1e7b6-4afd-49ea-b615-c65035ffe682.png)
+
 
 Tree = Value = 9
 
