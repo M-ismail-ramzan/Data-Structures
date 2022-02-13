@@ -1,8 +1,9 @@
-## Check .pdf for Docs on Code.
+## Note
+Check .pdf for Docs on Code.
 
-LINKED LIST AND OUEUES
-
-#lmplentation of Citizens Database in C++
+--> LINKED LIST AND OUEUES
+# TASK
+ lmplentation of Citizens Database in C++
 ## Develop a Database of Citizens for the Country. The System consists of following parts:
 
 1. Citizens Basic Information Database (CBID).
