@@ -42,7 +42,7 @@ Merged array: {1234, 108, 94, 67, 24, 23, 8, 7, 6, 5, 4, 3, 2, 1}
 Note: Final array should be created/merged in sorted order.
 
 
-##Task 4: EMPLOYEE PERFORMANCE REPORTING 20 marks
+## Task 4: EMPLOYEE PERFORMANCE REPORTING 20 marks
 Write a program that calculates performance based salary of customer support representatives (CSRs)
 in an organization:
 • csrID (Customer support representative ID): An array of seven strings to hold employee
