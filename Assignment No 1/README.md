@@ -5,12 +5,16 @@
 *You can only be eligible for bonus marks if you attempt the whole assignment*
 Consider the following C++ code fragment and answer the following questions:
 const int City = 6, School = 3, Class = 4;
+
 int enrolled_Students [City][School][Class];
+
 A. What is represented by enrolled_Students [2][1][3]? Explain it.
+
 B. Compute the logical address of enrolled_Students [2][1][3]. Suppose the base address of the table is
 0x100(h) in C++? Show complete steps. Also show the addressable location with the help of a diagram
 to support your calculations. Show final address in hexadecimal form. Marks will not be awarded for
 the direct answer.
+
 Hint: dimensions of enrolled_Students are 6 x 3 x 4
 
 ## Task 1: DYNAMIC 1D ARRAY 5 marks
@@ -63,8 +67,10 @@ number is stored in element 0 of the csrID array. The program should do the foll
 • Display each csrID and ask the user to enter names, hours and complaintsResolved.
 • It should then calculate the payRate and gross wages for that CSR and store them in the payRate
 and wages array, respectively.
+
 • After the data has been entered for all the CSRs, the program should display each CSR’s
 identification number, name and gross wages.
+
 • Program should also display options to display the top N CSRs on the basis of different criteria,
 including: number of complaintsResolved, number of hours worked.
 Note: Ensure all necessary input validation, for example, hours, complaintsResolved cannot be
