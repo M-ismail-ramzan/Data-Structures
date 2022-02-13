@@ -94,4 +94,4 @@ The cell then updates its own liveness according to 4 rules:
 4. Any dead cell with exactly 3 live neighbors becomes alive, by reproduction
 Run your code for infinite rounds and observe the pattern changing
 And that’s all there is to Life. These 4 rules give rise to some unbelievably complex and beautiful patterns,
-and an equally unbelievable quantity of analysis by Life devotees intent on discovering new ones.
+and an equally unbelievable quantity of analysis by Life devotees intent on discovering new ones. 
