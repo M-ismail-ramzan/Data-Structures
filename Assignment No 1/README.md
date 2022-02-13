@@ -36,6 +36,7 @@ A. Write a program that takes N integer arrays (of varying sizes) as input. You 
 user enter these arrays in ascending order, if user enters incorrectly display a prompt to read input
 in correct format. Write a C++ program to produce an array that merges elements of all arrays in
 descending order, but it also needs to remove duplicates.
+
 Example:
 Array A_1: {1, 3, 5, 6}
 Array A_2: {1, 2, 4, 8}
