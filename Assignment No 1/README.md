@@ -140,7 +140,7 @@ including: number of complaintsResolved, number of hours worked.
 
 negative numbers.
 
-**Task 5: GAME OF LIFE**
+## **Task 5: GAME OF LIFE**
 
 **20 marks**
 
@@ -179,6 +179,3 @@ And that’s all there is to Life. These 4 rules give rise to some unbelievably 
 
 and an equally unbelievable quantity of analysis by Life devotees intent on discovering new ones.
 
-**Good Luck!**
-
-Page **4** of **3**
