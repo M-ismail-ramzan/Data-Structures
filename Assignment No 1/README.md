@@ -1,26 +1,8 @@
 ## Don't Forget to look into .pdf or .docx file to see working of code.
 ### Following are the Assignment Questions
-**Submission:** Combine all your work (solution folder) in one .zip file. Use proper naming convention for
 
-your submission file. Name the .zip file as COURSE\_ROLL-NUM\_01.zip (e.g. DS\_19i0412\_01.zip).
 
-Submit .zip file on Google Classroom within the deadline. Submissions on the email will not be accepted.
-
-**Plagiarism:** Plagiarism cases will be dealt with strictly. If found plagiarized, both the involved parties
-
-will be awarded zero marks in this assignment. Copying from the Internet is the easiest way to get caught!
-
-**Deadline:** The deadline to submit the assignment is 30th September, 2021 at 11:59 PM. Correct and
-
-timely submission of the assignment is the responsibility of every student.
-
-**Comments:** Comment your code properly. Write your name and roll number (as a block comment) at
-
-the beginning of the solution to each problem.
-
-**Task 0: ADDRESS TRANSLATION (BONUS)**
-
-**5 marks**
+## **Task 0: ADDRESS TRANSLATION (BONUS)**
 
 **\*You can only be eligible for bonus marks if you attempt the whole assignment\***
 
@@ -42,9 +24,7 @@ the direct answer.
 
 Hint: dimensions of enrolled\_Students are 6 x 3 x 4
 
-**Task 1: DYNAMIC 1D ARRAY**
-
-**5 marks**
+## **Task 1: DYNAMIC 1D ARRAY**
 
 A. Write a C++ program that dynamically creates an array of N elements. The program should take
 
@@ -54,21 +34,9 @@ array.
 
 **Note:** Array elements should be accessed using pointer notation only.
 
-Page **1** of **3**
 
 
-
-
-
-**National University of Computer and Emerging Sciences**
-
-**School of Computing**
-
-**Fall 2021**
-
-**Islamabad Campus**
-
-**Task 2: DYNAMIC 2D ARRAY**
+## **Task 2: DYNAMIC 2D ARRAY**
 
 **10 marks**
 
@@ -86,7 +54,7 @@ B. Write a program to multiply two matrices and return the resultant matrix.
 
 **Note:** Array elements should be accessed using pointer notation only.
 
-**Task 3: SORTING AND MERGING**
+## **Task 3: SORTING AND MERGING**
 
 **15 marks**
 
@@ -114,7 +82,7 @@ Merged array: {1234, 108, 94, 67, 24, 23, 8, 7, 6, 5, 4, 3, 2, 1}
 
 **Note:** Final array should be created/merged in sorted order.
 
-**Task 4: EMPLOYEE PERFORMANCE REPORTING**
+## **Task 4: EMPLOYEE PERFORMANCE REPORTING**
 
 **20 marks**
 
@@ -134,27 +102,11 @@ CSR\_01, CSR\_02, CSR\_03, CSR\_04, CSR\_05, CSR\_06, CSR\_07
 
 • **complaintsResolved:** Number of complaints successfully resolved by each CSR, input at run time
 
-Page **2** of **3**
-
-
-
-
-
-**National University of Computer and Emerging Sciences**
-
-**School of Computing**
-
-**Fall 2021**
-
-**Islamabad Campus**
-
 • **payRate:** An array of seven to hold each employee s hourly pay rate, where payRate is calculated
 
 as following:
 
-payRate = $25 + 25\*(comp nts
-
-l intsResolved by each CSR/total compl i
+payRate = $25 + 25\*(comp ntsl intsResolved by each CSR/total compl i
 
 a a
 
@@ -210,21 +162,6 @@ Make a type char 30 x 30 2D grid. Randomly assign active and dead cells. Active 
 
 and dead cell will have value ‘ ’.
 
-Page **3** of **3**
-
-
-
-
-
-**National University of Computer and Emerging Sciences**
-
-**School of Computing**
-
-**Fall 2021**
-
-**Islamabad Campus**
-
-In Above diagram Blue cell is the current cell whereas Red cells are its neighboring cells
 
 The cell then updates its own liveness according to 4 rules:
 
